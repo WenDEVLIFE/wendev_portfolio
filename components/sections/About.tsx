@@ -12,7 +12,14 @@ const TECH_STACK = [
     { name: "Firebase", icon: "/assets/icons/firebase.svg" },
     { name: "Docker", icon: "/assets/icons/docker.svg" },
     { name: "PostgreSQL", icon: "/assets/icons/pgsql.svg" },
-    { name: "MongoDB", icon: "/assets/icons/mongodb.svg" }
+    { name: "MongoDB", icon: "/assets/icons/mongodb.svg" },
+    { name: "TensorFlow", icon: "/assets/icons/tensorflow.svg" },
+    { name: "Jupyter Notebooks", icon: "/assets/icons/jupyter.svg" },
+    { name: "Supabase", icon: "/assets/icons/supabase.svg" },
+    { name: "Jetpack Compose", icon: "/assets/icons/jetpackcompose.svg" },
+    { name: "Swift", icon: "/assets/icons/swift.svg" },
+    { name: "Kotlin", icon: "/assets/icons/kotlin.svg" },
+    { name: "Java", icon: "/assets/icons/java.svg" },
 ];
 
 export function About() {

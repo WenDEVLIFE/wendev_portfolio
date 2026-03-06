@@ -26,9 +26,13 @@ export function Navbar() {
                 <a href="#projects" className="hover:text-white transition-colors duration-300">Work</a>
                 <a href="#contact" className="hover:text-white transition-colors duration-300">Contact</a>
             </div>
-            <button className="hidden md:block bg-white text-black scale-100 hover:scale-[1.02] active:scale-[0.98] rounded-full px-5 py-2 text-sm font-semibold transition-all duration-300">
-                Available
-            </button>
+            <div className="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-neutral-300 tracking-wider">
+                <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                </span>
+                8AM - 5PM PH Time
+            </div>
 
             {/* Mobile Toggle */}
             <button
@@ -52,9 +56,13 @@ export function Navbar() {
                             <a href="#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">About</a>
                             <a href="#projects" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Work</a>
                             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Contact</a>
-                            <button className="bg-white text-black rounded-full px-5 py-3 text-base font-semibold w-full mt-2">
-                                Available
-                            </button>
+                            <div className="flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-neutral-300 w-full mt-2 tracking-wider">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+                                </span>
+                                8AM - 5PM PH Time
+                            </div>
                         </div>
                     </motion.div>
                 )}

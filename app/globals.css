@@ -37,62 +37,17 @@
   --font-mono: var(--font-geist-mono);
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-/* Professional Ambient Glow */
-.ambient-glow {
-  position: fixed;
-  top: -20vh;
-  left: 50vw;
-  width: 100vw;
-  height: 50vh;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Base UI Components */
-.bento-card {
-  @apply rounded-3xl border border-border p-8 transition-all duration-500 ease-[cubic-bezier(0.22, 1, 0.36, 1)] hover:border-white/10 hover:bg-white/[0.02];
-  background: var(--glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-}
-
-@layer utilities {
-  .section-padding {
-    @apply py-24 px-6 md:py-32 md:px-12 lg:px-32;
+@layer base {
+  html {
+    scroll-behavior: smooth;
   }
 
-  .glass {
-    background: var(--glass);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--border);
-  }
-
-  .text-gradient {
-    background: linear-gradient(to right, var(--foreground) 0%, #666 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 }

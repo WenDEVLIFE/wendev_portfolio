@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #111111;
-  --accent: #2563eb;
+  --background: #fafafa;
+  --foreground: #09090b;
+  --accent: #171717;
   --accent-foreground: #ffffff;
   --muted: #f4f4f5;
   --muted-foreground: #71717a;
-  --border: #e4e4e7;
-  --glass: rgba(255, 255, 255, 0.7);
+  --border: rgba(0, 0, 0, 0.08);
+  --glass: rgba(255, 255, 255, 0.6);
+  --ring: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #09090b;
-    --foreground: #fafafa;
-    --accent: #3b82f6;
-    --accent-foreground: #ffffff;
-    --muted: #27272a;
-    --muted-foreground: #a1a1aa;
-    --border: #27272a;
-    --glass: rgba(9, 9, 11, 0.7);
+    --background: #030303;
+    --foreground: #f0f0f0;
+    --accent: #ffffff;
+    --accent-foreground: #000000;
+    --muted: #111111;
+    --muted-foreground: #888888;
+    --border: rgba(255, 255, 255, 0.06);
+    --glass: rgba(255, 255, 255, 0.02);
   }
 }
 
@@ -52,25 +53,46 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-.glass {
+/* Professional Ambient Glow */
+.ambient-glow {
+  position: fixed;
+  top: -20vh;
+  left: 50vw;
+  width: 100vw;
+  height: 50vh;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Base UI Components */
+.bento-card {
+  @apply rounded-3xl border border-border p-8 transition-all duration-500 ease-[cubic-bezier(0.22, 1, 0.36, 1)] hover:border-white/10 hover:bg-white/[0.02];
   background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-}
-
-.text-gradient {
-  background: linear-gradient(135deg, var(--foreground) 0%, var(--muted-foreground) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 @layer utilities {
   .section-padding {
-    @apply py-20 px-6 md:py-32 md:px-12 lg:px-24;
+    @apply py-24 px-6 md:py-32 md:px-12 lg:px-32;
+  }
+
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+  }
+
+  .text-gradient {
+    background: linear-gradient(to right, var(--foreground) 0%, #666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
-

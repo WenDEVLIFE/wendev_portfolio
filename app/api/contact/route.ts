@@ -1,24 +1,21 @@
-"use server";
-
+import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-export async function sendEmail(prevState: unknown, formData: FormData) {
+export async function POST(req: Request) {
     try {
-        const name = formData.get("name") as string;
-        const email = formData.get("email") as string;
-        const message = formData.get("message") as string;
-        const recaptchaToken = formData.get("g-recaptcha-response") as string;
+        const body = await req.json();
+        const { name, email, message, recaptchaToken } = body;
 
         if (!name || !email || !message) {
-            return { error: "Name, email, and message are required." };
+            return NextResponse.json({ error: "Name, email, and message are required." }, { status: 400 });
         }
 
         if (!recaptchaToken) {
-            return { error: "Please complete the reCAPTCHA verification." };
+            return NextResponse.json({ error: "Please complete the reCAPTCHA verification." }, { status: 400 });
         }
 
-        // 1. Verify reCAPTCHA token using env key or Google's official test key
-        const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+        // 1. Verify reCAPTCHA token using secret key from environment
+        const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
 
         const recaptchaResponse = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
             method: "POST",
@@ -28,16 +25,16 @@ export async function sendEmail(prevState: unknown, formData: FormData) {
         const recaptchaData = await recaptchaResponse.json();
 
         if (!recaptchaData.success) {
-            return { error: "reCAPTCHA verification failed. Please try again." };
+            return NextResponse.json({ error: "reCAPTCHA verification failed. Please try again." }, { status: 400 });
         }
 
         // 2. Setup Nodemailer transporter
-        // NOTE: Accounting for the typo in the .env.local file "GMAIL_APP_PASSWOTD"
-        const password = process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASSWOTD;
+        // NOTE: Standardized environment variable name in .env.local
+        const password = process.env.GMAIL_APP_PASSWORD;
         const userEmail = process.env.GMAIL_ACCOUNT;
 
         if (!userEmail || !password) {
-            return { error: "Server email credentials are not configured properly." };
+            return NextResponse.json({ error: "Server email credentials are not configured properly." }, { status: 500 });
         }
 
         const transporter = nodemailer.createTransport({
@@ -50,9 +47,9 @@ export async function sendEmail(prevState: unknown, formData: FormData) {
 
         // 3. Send Email
         const mailOptions = {
-            from: `"${name}" <${userEmail}>`, // Send *from* our auth email so Google doesn't block it
-            replyTo: email,                   // When you click 'Reply', it replies to the client
-            to: userEmail,                    // Send *to* yourself
+            from: `"${name}" <${userEmail}>`,
+            replyTo: email,
+            to: userEmail,
             subject: `Portfolio Contact Form: New Message from ${name}`,
             text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
             html: `
@@ -67,10 +64,10 @@ export async function sendEmail(prevState: unknown, formData: FormData) {
 
         await transporter.sendMail(mailOptions);
 
-        return { success: "Message sent successfully! I'll get back to you soon." };
+        return NextResponse.json({ success: "Message sent successfully! I'll get back to you soon." });
     } catch (e: unknown) {
-        console.error("Error sending email:", e);
-        const errorMessage = e instanceof Error ? e.message : "Failed to send the message. Please try again later.";
-        return { error: errorMessage };
+        console.error("Error in contact API:", e);
+        const errorMessage = e instanceof Error ? e.message : "Failed to send the message.";
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }

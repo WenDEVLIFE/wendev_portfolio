@@ -1,7 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+
+const ICON_MAP: Record<string, string> = {
+    "React": "/assets/icons/reactjs.svg",
+    "Node.js": "/assets/icons/nigganodes.svg",
+    "JavaScript": "/assets/icons/javascript.svg",
+    "Flutter": "/assets/icons/flutter.svg",
+    "Dart": "/assets/icons/dart.svg",
+    "Firebase": "/assets/icons/firebase.svg",
+    "Kotlin": "/assets/icons/kotlin.svg"
+};
 
 const PROJECTS = [
     {
@@ -93,11 +104,16 @@ export function Projects() {
                             <p className="mb-6 text-base md:text-lg text-neutral-400 leading-relaxed font-light">
                                 {project.description}
                             </p>
-                            <div className="flex flex-wrap gap-2 mb-8 md:mb-10">
+                            <div className="flex flex-wrap gap-2.5 mb-8 md:mb-10">
                                 {project.tags.map(tag => (
-                                    <span key={tag} className="rounded-full bg-white/5 px-3 py-1 text-[10px] font-semibold tracking-wide text-neutral-300 border border-white/5">
-                                        {tag}
-                                    </span>
+                                    <div key={tag} className="flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1.5 hover:bg-white/10 transition-colors">
+                                        {ICON_MAP[tag] && (
+                                            <Image src={ICON_MAP[tag]} alt={tag} width={14} height={14} className="w-3.5 h-3.5" />
+                                        )}
+                                        <span className="text-[10px] font-semibold tracking-wide text-neutral-300">
+                                            {tag}
+                                        </span>
+                                    </div>
                                 ))}
                             </div>
                             <div className="flex items-center gap-6">

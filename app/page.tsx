@@ -29,7 +29,7 @@ export default function Home() {
       <div className={`relative min-h-screen font-sans selection:bg-white/20 selection:text-white transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
         <Background />
         <Navbar />
-        <main className="mx-auto max-w-7xl">
+        <main className="mx-auto max-w-[1920px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
           <Hero />
           <About />
           <Projects />

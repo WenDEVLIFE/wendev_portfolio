@@ -24,7 +24,7 @@ const TECH_STACK = [
 
 export function About() {
     return (
-        <section id="about" className="py-24 px-6 md:py-32 md:px-12 lg:px-32">
+        <section id="about" className="py-24 px-4 sm:px-6 md:py-32 md:px-12 lg:px-20 xl:px-24">
             <div className="mb-12 md:mb-16">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-5xl">Design meets Engineering</h2>
             </div>

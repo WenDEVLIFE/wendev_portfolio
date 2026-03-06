@@ -7,7 +7,7 @@ export function Hero() {
     const customEasing: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
     return (
-        <section className="py-24 px-6 md:py-32 md:px-12 lg:px-32 relative flex min-h-[90vh] flex-col items-center justify-center text-center">
+        <section id="about" className="py-24 px-4 sm:px-6 md:py-32 md:px-12 lg:px-20 relative flex min-h-[90vh] flex-col items-center justify-center text-center">
             <motion.div
                 initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}

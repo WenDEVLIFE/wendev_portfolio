@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
@@ -9,7 +10,15 @@ export function Navbar() {
 
     return (
         <nav className="bg-white/[0.02] backdrop-blur-[24px] border border-white/[0.06] sticky top-6 z-50 mx-4 flex items-center justify-between rounded-full px-6 py-3 md:mx-auto md:max-w-5xl md:px-8 shadow-2xl shadow-black/50">
-            <div className="text-xl font-bold tracking-tighter">Frouen.</div>
+            <div className="flex items-center">
+                <Image
+                    src="/assets/logo/WHITE-LOGO-PNG.png"
+                    alt="Frouen Logo"
+                    width={100}
+                    height={32}
+                    className="h-6 md:h-8 w-auto object-contain"
+                />
+            </div>
 
             {/* Desktop Menu */}
             <div className="hidden gap-8 text-sm font-medium md:flex text-neutral-400">

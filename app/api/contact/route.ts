@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 
 export async function POST(req: Request) {
     try {
@@ -17,47 +16,63 @@ export async function POST(req: Request) {
         // 1. Verify reCAPTCHA token using secret key from environment
         const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
 
+        const params = new URLSearchParams();
+        params.append('secret', recaptchaSecret || '');
+        params.append('response', recaptchaToken);
+
         const recaptchaResponse = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `secret=${recaptchaSecret}&response=${recaptchaToken}`
+            body: params.toString()
         });
-        const recaptchaData = await recaptchaResponse.json();
+        let recaptchaData;
+        const recaptchaClone = recaptchaResponse.clone();
+        try {
+            recaptchaData = await recaptchaResponse.json();
+        } catch (jsonError) {
+            const errorText = await recaptchaClone.text();
+            console.error("Failed to parse reCAPTCHA JSON. Response text:", errorText);
+            throw new Error(`reCAPTCHA service returned HTML/Invalid response. check if your Secret Key is correct. Full response: ${errorText.substring(0, 100)}`);
+        }
 
         if (!recaptchaData.success) {
-            return NextResponse.json({ error: "reCAPTCHA verification failed. Please try again." }, { status: 400 });
+            const errorCodes = recaptchaData["error-codes"] || [];
+            console.error("reCAPTCHA Error Codes:", errorCodes);
+
+            let descriptiveError = "reCAPTCHA verification failed.";
+            if (errorCodes.includes("invalid-input-secret") || errorCodes.includes("invalid-keys")) {
+                descriptiveError = "Your reCAPTCHA Secret Key is invalid. Please ensure you created a 'reCAPTCHA v2 (Checkbox)' key and not a v3 key.";
+            } else if (errorCodes.includes("invalid-input-response")) {
+                descriptiveError = "The reCAPTCHA token is invalid or expired. Please refresh and try again.";
+            }
+
+            return NextResponse.json({ error: descriptiveError }, { status: 400 });
         }
 
-        // 2. Setup Nodemailer transporter
-        // NOTE: Standardized environment variable name in .env.local
-        const password = process.env.GMAIL_APP_PASSWORD;
-        const userEmail = process.env.GMAIL_ACCOUNT;
-
-        if (!userEmail || !password) {
-            return NextResponse.json({ error: "Server email credentials are not configured properly." }, { status: 500 });
-        }
-
+        // 2. Send Email using Nodemailer
+        const nodemailer = await import("nodemailer");
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: userEmail,
-                pass: password,
+                user: process.env.GMAIL_ACCOUNT,
+                pass: process.env.GMAIL_APP_PASSWORD,
             },
         });
 
-        // 3. Send Email
         const mailOptions = {
-            from: `"${name}" <${userEmail}>`,
-            replyTo: email,
-            to: userEmail,
-            subject: `Portfolio Contact Form: New Message from ${name}`,
+            from: process.env.GMAIL_ACCOUNT,
+            to: "medinajrfrouen@gmail.com",
+            subject: `Portfolio Contact: ${name}`,
             text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
             html: `
-                <h3>New Message from Portfolio Website</h3>
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <div style="margin-top: 1rem; padding: 1rem; border-left: 4px solid #333; background: #f9f9f9;">
-                    <p style="white-space: pre-wrap;">${message}</p>
+                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #333;">New Contact Form Submission</h2>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Message:</strong></p>
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                        ${message.replace(/\n/g, "<br>")}
+                    </div>
                 </div>
             `,
         };

@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Wendev | Portfolio",
   description: "Web Developer & Designer Portfolio - Crafting premium digital experiences.",
+  icons: {
+    icon: "/assets/logo/WHITE-LOGO-PNG.png",
+  },
 };
 
 export default function RootLayout({

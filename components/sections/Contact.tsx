@@ -18,10 +18,30 @@ export function Contact() {
                     <h2 className="bg-gradient-to-r from-white to-neutral-500 bg-clip-text text-transparent mb-6 text-4xl font-black tracking-tighter sm:text-5xl md:text-8xl">
                         Let&apos;s Build.
                     </h2>
-                    <p className="mx-auto mb-10 md:mb-16 max-w-xl text-base md:text-xl text-neutral-400 font-light">
+                    <p className="mx-auto mb-12 max-w-xl text-base md:text-xl text-neutral-400 font-light">
                         Ready to elevate your digital presence? I am currently accepting strategic design and development projects.
                     </p>
-                    <div className="flex flex-col items-center gap-8 w-full overflow-hidden">
+
+                    <form className="w-full max-w-md mx-auto mb-16 flex flex-col gap-4 text-left font-sans">
+                        <div className="flex flex-col gap-1.5">
+                            <label htmlFor="name" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">Name</label>
+                            <input type="text" id="name" placeholder="John Doe" className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors" required />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label htmlFor="email" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">Email</label>
+                            <input type="email" id="email" placeholder="john@example.com" className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors" required />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <label htmlFor="message" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">Message</label>
+                            <textarea id="message" placeholder="How can I help you?" rows={4} className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors resize-none" required></textarea>
+                        </div>
+                        <button type="submit" className="mt-4 w-full bg-white text-black h-14 flex items-center justify-center rounded-full text-sm font-bold uppercase tracking-wider transition-transform hover:scale-[1.02]">
+                            Send Message
+                        </button>
+                    </form>
+
+                    <div className="flex flex-col items-center w-full overflow-hidden">
+                        <span className="text-xs font-semibold uppercase tracking-widest text-neutral-600 mb-6">Or email directly</span>
                         <a
                             href="mailto:medinajrfrouen@gmail.com"
                             className="group relative inline-block text-lg font-bold tracking-tight sm:text-2xl md:text-4xl text-white break-all md:break-normal px-2"

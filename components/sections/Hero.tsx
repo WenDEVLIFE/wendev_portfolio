@@ -47,6 +47,9 @@ export function Hero() {
                 <a href="#projects" className="bg-white text-black h-14 flex items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-wider transition-transform hover:scale-[1.02] w-full sm:w-auto">
                     View Selected Work
                 </a>
+                <a href="https://drive.google.com/drive/u/2/folders/1E0Syh-hwKiPOon_cfONmJ9wIWMHWqGH8" target="_blank" rel="noopener noreferrer" className="bg-transparent text-white border border-white/20 h-14 flex items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-wider transition-all hover:bg-white/5 w-full sm:w-auto">
+                    View CV & Certificates
+                </a>
             </motion.div>
         </section>
     );

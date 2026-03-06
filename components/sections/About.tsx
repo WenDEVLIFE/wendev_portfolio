@@ -1,7 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Palette, Cpu, Globe, ChevronRight } from "lucide-react";
+
+const TECH_STACK = [
+    { name: "Flutter", icon: "/assets/icons/flutter.svg" },
+    { name: "React", icon: "/assets/icons/reactjs.svg" },
+    { name: "Node.js", icon: "/assets/icons/nigganodes.svg" },
+    { name: "Python", icon: "/assets/icons/python.svg" },
+    { name: "Firebase", icon: "/assets/icons/firebase.svg" },
+    { name: "Docker", icon: "/assets/icons/docker.svg" },
+    { name: "PostgreSQL", icon: "/assets/icons/pgsql.svg" },
+    { name: "MongoDB", icon: "/assets/icons/mongodb.svg" }
+];
 
 export function About() {
     return (
@@ -24,7 +36,7 @@ export function About() {
                         </p>
                     </div>
                     <div className="mt-12 flex items-center gap-4 border-t border-white/10 pt-8 text-sm text-neutral-500 font-medium tracking-wide uppercase">
-                        <span>President, GDG Davao | CEO SudoTech+</span>
+                        <span></span>
                     </div>
                 </motion.div>
 
@@ -38,11 +50,14 @@ export function About() {
                         </div>
                     </div>
                     <h3 className="text-2xl font-bold tracking-tight mb-6">Core Technologies</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {["Flutter", "React", "Node.js", "Python", "TypeScript", "AWS", "Firebase", "Docker"].map(s => (
-                            <span key={s} className="rounded-full bg-white/5 px-4 py-2 text-xs font-semibold tracking-wide text-neutral-300 border border-white/5">
-                                {s}
-                            </span>
+                    <div className="flex flex-wrap gap-3">
+                        {TECH_STACK.map((tech) => (
+                            <div key={tech.name} className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 hover:bg-white/10 transition-colors">
+                                <Image src={tech.icon} alt={tech.name} width={16} height={16} className="w-4 h-4" />
+                                <span className="text-xs font-semibold tracking-wide text-neutral-300">
+                                    {tech.name}
+                                </span>
+                            </div>
                         ))}
                     </div>
                 </motion.div>

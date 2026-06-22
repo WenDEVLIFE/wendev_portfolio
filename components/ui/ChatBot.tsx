@@ -2,11 +2,33 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, Bot, User, Loader2 } from "lucide-react";
+import { MessageSquare, X, Send, ChevronDown } from "lucide-react";
 
 interface Message {
     role: "user" | "bot";
     content: string;
+}
+
+const MODELS = [
+    { id: "llama3-8b-8192", label: "Llama 3 8B" },
+    { id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B" },
+    { id: "mixtral-8x7b-32768", label: "Mixtral 8x7B" },
+    { id: "gemma2-9b-it", label: "Gemma 2 9B" },
+];
+
+function LoadingDots() {
+    const [dots, setDots] = useState("");
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDots(prev => prev.length >= 5 ? "" : prev + ".");
+        }, 400);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <span className="font-mono text-neutral-500 tracking-wider">{dots}</span>
+    );
 }
 
 export function ChatBot() {
@@ -16,7 +38,10 @@ export function ChatBot() {
     ]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [model, setModel] = useState(MODELS[0]);
+    const [showModelPicker, setShowModelPicker] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const modelPickerRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -25,6 +50,16 @@ export function ChatBot() {
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (modelPickerRef.current && !modelPickerRef.current.contains(e.target as Node)) {
+                setShowModelPicker(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const handleSend = async () => {
         if (!input.trim() || isLoading) return;
@@ -40,8 +75,9 @@ export function ChatBot() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     message: userMsg,
+                    model: model.id,
                     history: messages.map(m => ({
-                        role: m.role === "bot" ? "model" : "user",
+                        role: m.role === "bot" ? "assistant" : "user",
                         content: m.content
                     }))
                 })
@@ -68,27 +104,20 @@ export function ChatBot() {
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="mb-4 w-[90vw] sm:w-[400px] h-[500px] bg-black/80 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+                        className="mb-4 w-[90vw] sm:w-[400px] h-[500px] bg-black/90 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
                     >
                         {/* Header */}
-                        <div className="p-4 border-b border-white/10 bg-white/5 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                                    <Bot className="w-5 h-5 text-white" />
-                                </div>
-                                <div>
-                                    <h3 className="text-sm font-bold text-white tracking-tight">Frouen AI</h3>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                        <span className="text-[10px] text-neutral-400 font-medium uppercase tracking-widest">Active Now</span>
-                                    </div>
-                                </div>
+                        <div className="p-4 pb-3 border-b border-white/10 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <span className="text-neutral-600 font-mono text-xs select-none">=-=-=--=-</span>
+                                <span className="text-xs font-bold text-white/80 tracking-[0.2em]">CHATBOT</span>
+                                <span className="text-neutral-600 font-mono text-xs select-none">-=-=-=-=-</span>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
                             >
-                                <X className="w-5 h-5 text-neutral-400" />
+                                <X className="w-4 h-4 text-neutral-500" />
                             </button>
                         </div>
 
@@ -111,8 +140,9 @@ export function ChatBot() {
                             ))}
                             {isLoading && (
                                 <div className="flex justify-start">
-                                    <div className="bg-white/5 border border-white/10 p-3 rounded-2xl">
-                                        <Loader2 className="w-4 h-4 text-neutral-400 animate-spin" />
+                                    <div className="bg-white/5 border border-white/10 px-4 py-3 rounded-2xl">
+                                        <span className="font-mono text-sm text-neutral-400">generating</span>
+                                        <LoadingDots />
                                     </div>
                                 </div>
                             )}
@@ -120,22 +150,59 @@ export function ChatBot() {
                         </div>
 
                         {/* Input */}
-                        <div className="p-4 border-t border-white/10 bg-white/5">
+                        <div className="p-4 pt-3 border-t border-white/10">
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-                                className="relative lg:flex items-center gap-2"
+                                className="flex items-center gap-2"
                             >
+                                <div ref={modelPickerRef} className="relative shrink-0">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowModelPicker(!showModelPicker)}
+                                        className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[10px] font-medium text-neutral-500 hover:text-white hover:border-white/20 transition-colors"
+                                    >
+                                        <span className="text-neutral-600 mr-0.5">-=-</span>
+                                        {model.label}
+                                        <span className="text-neutral-600 ml-0.5">-=-</span>
+                                        <ChevronDown className={`w-3 h-3 transition-transform ${showModelPicker ? "rotate-180" : ""}`} />
+                                    </button>
+                                    <AnimatePresence>
+                                        {showModelPicker && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: -4, scale: 0.95 }}
+                                                transition={{ duration: 0.15 }}
+                                                className="absolute left-0 bottom-full mb-2 w-40 bg-black/95 border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-2xl z-50"
+                                            >
+                                                {MODELS.map((m) => (
+                                                    <button
+                                                        key={m.id}
+                                                        type="button"
+                                                        onClick={() => { setModel(m); setShowModelPicker(false); }}
+                                                        className={`w-full text-left px-3.5 py-2.5 text-xs font-medium transition-colors ${model.id === m.id
+                                                            ? "bg-white/10 text-white"
+                                                            : "text-neutral-400 hover:text-white hover:bg-white/5"
+                                                            }`}
+                                                    >
+                                                        {m.label}
+                                                    </button>
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
                                 <input
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Ask about projects..."
-                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors"
+                                    className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/30 transition-colors"
                                 />
                                 <button
                                     type="submit"
                                     disabled={!input.trim() || isLoading}
-                                    className="absolute right-2 top-1.5 p-2 bg-white text-black rounded-xl disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
+                                    className="p-2.5 bg-white text-black rounded-xl disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shrink-0"
                                 >
                                     <Send className="w-4 h-4" />
                                 </button>

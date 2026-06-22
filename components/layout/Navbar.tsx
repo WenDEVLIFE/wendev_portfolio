@@ -1,15 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 export function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     return (
-        <nav className="bg-white/[0.02] backdrop-blur-[24px] border border-white/[0.06] sticky top-6 z-50 mx-4 flex items-center justify-between rounded-full px-6 py-3 md:mx-auto md:max-w-5xl md:px-8 shadow-2xl shadow-black/50">
+        <motion.nav
+            animate={{
+                paddingLeft: isScrolled ? "1.0rem" : "1.5rem",
+                paddingRight: isScrolled ? "1.0rem" : "1.5rem",
+                maxWidth: isScrolled ? "64rem" : "88rem",
+            }}
+            transition={{
+                duration: 0.5,
+                ease: [0.22, 1, 0.36, 1],
+            }}
+            className="bg-white/[0.02] backdrop-blur-[24px] border border-white/[0.06] sticky top-6 z-50 mx-4 flex items-center justify-between rounded-full py-3 shadow-2xl shadow-black/50 md:mx-auto"
+        >
             <div className="flex items-center">
                 <Image
                     src="/assets/logo/WHITE-LOGO-PNG.png"
@@ -67,6 +88,6 @@ export function Navbar() {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </motion.nav>
     );
 }

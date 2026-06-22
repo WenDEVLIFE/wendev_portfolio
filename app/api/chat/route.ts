@@ -61,10 +61,9 @@ function isInputHarmful(input: string): { blocked: boolean; reason?: string } {
 }
 
 export const FREE_MODELS = [
-    { id: "llama3-8b-8192", label: "Llama 3 8B" },
     { id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B" },
-    { id: "mixtral-8x7b-32768", label: "Mixtral 8x7B" },
-    { id: "gemma2-9b-it", label: "Gemma 2 9B" },
+    { id: "qwen/qwen3-32b", label: "Qwen 3 32B" },
+    { id: "openai/gpt-oss-120b", label: "OpenAI 120B" },
 ] as const;
 
 export async function POST(req: Request) {

@@ -37,9 +37,9 @@ export function About() {
                         <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white transition-colors group-hover:bg-white/10">
                             <Palette className="h-5 w-5" />
                         </div>
-                        <h3 className="mb-4 text-3xl font-bold tracking-tight">Full Stack Developer</h3>
+                        <h3 className="mb-4 text-3xl font-bold tracking-tight">Software Developer</h3>
                         <p className="text-neutral-400 leading-relaxed text-lg">
-                            Developing mobile and web applications using Flutter, React, and Node.js. Specializing in cross-platform solutions and cloud integration.
+                            Develop Web and mobile applications to meet the needs of modern businesses to upscale their operations.
                         </p>
                     </div>
                     <div className="mt-12 flex items-center gap-4 border-t border-white/10 pt-8 text-sm text-neutral-500 font-medium tracking-wide uppercase">

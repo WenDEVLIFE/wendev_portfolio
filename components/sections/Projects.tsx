@@ -32,7 +32,7 @@ const ICON_MAP: Record<string, string> = {
 const PROJECTS = [
     {
         name: "SudoTech+",
-        description: "Startup website of my company",
+        description: "A tech startup website that establishes brand credibility and connects businesses with modern software solutions.",
         tags: ["React", "Node.js", "JavaScript"],
         url: "https://www.sudotech.plus/",
         domain: "sudotech.plus",
@@ -40,7 +40,7 @@ const PROJECTS = [
     },
     {
         name: "Aid Anchor",
-        description: "A mobile app for first aid tips and helping communities from disasters",
+        description: "A disaster preparedness app that helps communities access life-saving first aid knowledge and coordinate relief efforts during emergencies.",
         tags: ["Flutter", "Dart", "Firebase"],
         url: "https://github.com/WenDEVLIFE/aid_anchor",
         domain: "github.com",
@@ -48,7 +48,7 @@ const PROJECTS = [
     },
     {
         name: "ClassAce",
-        description: "A mobile app for students to manage their classes, assignments, and schedules",
+        description: "A student productivity app that solves academic disorganization by centralizing class schedules, assignments, and deadlines in one place.",
         tags: ["Kotlin", "Firebase"],
         url: "https://github.com/WenDEVLIFE/ClassAce",
         domain: "github.com",
@@ -56,7 +56,7 @@ const PROJECTS = [
     },
     {
         name: "DPR CAR RENTAL",
-        description: "A mobile app that will manage rental system using AI and management",
+        description: "An AI-powered fleet management solution that automates reservations, tracks vehicle availability, and streamlines rental operations for car businesses.",
         tags: ["Flutter", "Dart", "Firebase"],
         url: "https://github.com/WenDEVLIFE/dpr_car_rentals",
         domain: "github.com",
@@ -64,7 +64,7 @@ const PROJECTS = [
     },
     {
         name: "Print Finder",
-        description: "A platform to easily locate printing services",
+        description: "A locator platform that solves the hassle of finding reliable printing services by connecting users with nearby print shops in real time.",
         tags: ["Kotlin", "Firebase"],
         url: "#",
         domain: "github.com",
@@ -72,7 +72,7 @@ const PROJECTS = [
     },
     {
         name: "QR Code Generator",
-        description: "Utility application for generating and scanning QR codes",
+        description: "A dual-purpose scanning and generation tool that simplifies contactless data sharing for businesses and event organizers.",
         tags: ["Flutter", "Dart"],
         url: "#",
         domain: "github.com",
@@ -80,7 +80,7 @@ const PROJECTS = [
     },
     {
         name: "Housing Management",
-        description: "System for housing tracking and property management",
+        description: "A data-driven property management system that uses ML models to analyze housing trends and optimize real estate investments.",
         tags: ["Python", "TensorFlow", "Jupyter Notebooks"],
         url: "#",
         domain: "github.com",
@@ -88,7 +88,7 @@ const PROJECTS = [
     },
     {
         name: "NaveyGate",
-        description: "Gate pass and digital navigation platform",
+        description: "A digital access control platform that replaces paper-based gate passes with QR authentication for secure facility and visitor management.",
         tags: ["Flutter", "Dart", "TensorFlow", "Firebase", "Jupyter Notebooks",],
         url: "#",
         domain: "github.com",
@@ -96,7 +96,7 @@ const PROJECTS = [
     },
     {
         name: "Mandaya App",
-        description: "A mobile cultural and educational application",
+        description: "A cultural preservation platform that bridges indigenous heritage with modern education through interactive content and community engagement.",
         tags: ["Flutter", "Dart"],
         url: "#",
         domain: "github.com",
@@ -104,7 +104,7 @@ const PROJECTS = [
     },
     {
         name: "Wenlance IOS App",
-        description: "A mobile app for freelancers to manage their jobs and clients",
+        description: "A freelance business management app that helps independent professionals track clients, manage projects, and handle payments in one workflow.",
         tags: ["Swift", "Firebase"],
         url: "#",
         domain: "github.com",
@@ -139,8 +139,8 @@ export function Projects() {
     return (
         <section id="projects" className="py-24 px-6 md:py-32 md:px-12 lg:px-32">
             <div className="mb-20">
-                <h2 className="mb-4 text-4xl font-bold tracking-tighter md:text-5xl">Selected Work</h2>
-                <p className="text-neutral-400 text-lg">Digital products built with absolute precision.</p>
+                <h2 className="mb-4 text-4xl font-bold tracking-tighter md:text-5xl">Solutions That Drive Impact</h2>
+                <p className="text-neutral-400 text-lg">Web and mobile applications designed to solve real business problems.</p>
             </div>
 
             <motion.div

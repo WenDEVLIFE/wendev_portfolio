@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const authCheck = await verifyAdmin(req);
         const isAdmin = authCheck === null;
-        const isApproved = isAdmin ? (body.isApproved ?? false) : false;
+        const isApproved = isAdmin ? (body.isApproved ?? true) : false;
 
         const docRef = await getCollection().add({
             reviewerName: body.reviewerName,

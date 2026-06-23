@@ -5,6 +5,7 @@ import { signOut } from "firebase/auth";
 import { getAuth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { LogOut, FolderKanban, MessageSquareText, Plus, Upload, Pencil, Star } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface Project {
     id: string;
@@ -93,35 +94,58 @@ export default function AdminDashboardPage() {
         const tags = form.tags.split(",").map(t => t.trim()).filter(Boolean);
         const payload = { ...form, tags };
 
-        if (editingId) {
-            await fetch(`/api/projects/${editingId}`, {
+        const promise = editingId
+            ? fetch(`/api/projects/${editingId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
-            });
-        } else {
-            await fetch("/api/projects", {
+            })
+            : fetch("/api/projects", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
-        }
-        cancelForm();
-        fetchData();
+
+        toast.promise(
+            promise.then(async (res) => {
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || "Failed to save project");
+                }
+                cancelForm();
+                fetchData();
+            }),
+            {
+                loading: "Saving project...",
+                success: editingId ? "Project updated successfully!" : "Project created successfully!",
+                error: (err) => err.message || "Failed to save project",
+            }
+        );
     };
 
     const deleteProject = async (id: string) => {
         if (!confirm("Delete this project?")) return;
         const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
-        if (res.ok) fetchData();
+        if (res.ok) {
+            toast.success("Project deleted successfully");
+            fetchData();
+        } else {
+            const data = await res.json();
+            toast.error(data.error || "Failed to delete project");
+        }
     };
 
     const seedProjects = async () => {
         if (!confirm("Seed all 10 default projects into Firestore?")) return;
         setSeeding(true);
         const res = await fetch("/api/seed", { method: "POST" });
-        if (res.ok) fetchData();
         setSeeding(false);
+        if (res.ok) {
+            toast.success("Projects seeded successfully");
+            fetchData();
+        } else {
+            toast.error("Failed to seed projects");
+        }
     };
 
     const [reviewForm, setReviewForm] = useState(defaultReview);
@@ -135,9 +159,12 @@ export default function AdminDashboardPage() {
             body: JSON.stringify({ ...reviewForm, isApproved: true }),
         });
         if (res.ok) {
+            toast.success("Review created and approved!");
             setReviewForm(defaultReview);
             setShowReviewForm(false);
             fetchData();
+        } else {
+            toast.error("Failed to create review");
         }
     };
 
@@ -147,13 +174,23 @@ export default function AdminDashboardPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ isApproved: !current }),
         });
-        if (res.ok) fetchData();
+        if (res.ok) {
+            toast.success(current ? "Review set to pending" : "Review approved!");
+            fetchData();
+        } else {
+            toast.error("Failed to update review status");
+        }
     };
 
     const deleteReview = async (id: string) => {
         if (!confirm("Delete this review?")) return;
         const res = await fetch(`/api/reviews/${id}`, { method: "DELETE" });
-        if (res.ok) fetchData();
+        if (res.ok) {
+            toast.success("Review deleted");
+            fetchData();
+        } else {
+            toast.error("Failed to delete review");
+        }
     };
 
     return (

@@ -10,7 +10,13 @@ export async function verifyAdmin(req: Request): Promise<NextResponse | null> {
             return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
         }
         const decodedClaims = await getAdminAuth().verifySessionCookie(sessionCookie, true);
-        if (decodedClaims.email !== process.env.ADMIN_EMAIL) {
+        const allowedEmails = [
+            process.env.ADMIN_EMAIL,
+            "wwen485@gmail.com",
+            "frouenmedinajr@gmail.com"
+        ].filter(Boolean);
+
+        if (!allowedEmails.includes(decodedClaims.email)) {
             return NextResponse.json({ error: "Forbidden." }, { status: 403 });
         }
         return null;
@@ -18,3 +24,4 @@ export async function verifyAdmin(req: Request): Promise<NextResponse | null> {
         return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
     }
 }
+

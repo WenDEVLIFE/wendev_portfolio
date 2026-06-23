@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { verifyAdmin } from "@/lib/auth-utils";
+import { DocumentData, Query } from "firebase-admin/firestore";
 
 const getCollection = () => getAdminDb().collection("reviews");
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        const snapshot = await getCollection().where("isApproved", "==", true).orderBy("createdAt", "desc").get();
+        const authCheck = await verifyAdmin(req);
+        const isAdmin = authCheck === null;
+
+        let query: Query<DocumentData, DocumentData> = getCollection();
+        if (!isAdmin) {
+            query = query.where("isApproved", "==", true);
+        }
+        const snapshot = await query.orderBy("createdAt", "desc").get();
         const reviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         return NextResponse.json({ reviews });
     } catch (e) {
@@ -18,12 +26,16 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+        const authCheck = await verifyAdmin(req);
+        const isAdmin = authCheck === null;
+        const isApproved = isAdmin ? (body.isApproved ?? false) : false;
+
         const docRef = await getCollection().add({
             reviewerName: body.reviewerName,
             company: body.company || "",
             rating: body.rating,
             content: body.content,
-            isApproved: false,
+            isApproved,
             createdAt: new Date().toISOString(),
         });
         return NextResponse.json({ id: docRef.id }, { status: 201 });

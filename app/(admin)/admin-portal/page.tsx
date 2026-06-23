@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 import { getAuth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
-import { LogOut, FolderKanban, MessageSquareText, Plus, Upload } from "lucide-react";
+import { LogOut, FolderKanban, MessageSquareText, Plus, Upload, Pencil, Star } from "lucide-react";
 
 interface Project {
     id: string;
@@ -36,11 +36,19 @@ const defaultProject = {
     image: "",
 };
 
+const defaultReview = {
+    reviewerName: "",
+    company: "",
+    rating: 5,
+    content: "",
+};
+
 export default function AdminDashboardPage() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [activeTab, setActiveTab] = useState<"projects" | "reviews">("projects");
     const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState(defaultProject);
     const [seeding, setSeeding] = useState(false);
     const router = useRouter();
@@ -68,19 +76,38 @@ export default function AdminDashboardPage() {
         router.push("/");
     };
 
-    const createProject = async (e: React.FormEvent) => {
+    const startEdit = (p: Project) => {
+        setEditingId(p.id);
+        setForm({ name: p.name, description: p.description, tags: p.tags.join(", "), url: p.url, domain: p.domain, image: p.image });
+        setShowForm(true);
+    };
+
+    const cancelForm = () => {
+        setForm(defaultProject);
+        setEditingId(null);
+        setShowForm(false);
+    };
+
+    const saveProject = async (e: React.FormEvent) => {
         e.preventDefault();
         const tags = form.tags.split(",").map(t => t.trim()).filter(Boolean);
-        const res = await fetch("/api/projects", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...form, tags }),
-        });
-        if (res.ok) {
-            setForm(defaultProject);
-            setShowForm(false);
-            fetchData();
+        const payload = { ...form, tags };
+
+        if (editingId) {
+            await fetch(`/api/projects/${editingId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+        } else {
+            await fetch("/api/projects", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
         }
+        cancelForm();
+        fetchData();
     };
 
     const deleteProject = async (id: string) => {
@@ -95,6 +122,23 @@ export default function AdminDashboardPage() {
         const res = await fetch("/api/seed", { method: "POST" });
         if (res.ok) fetchData();
         setSeeding(false);
+    };
+
+    const [reviewForm, setReviewForm] = useState(defaultReview);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+
+    const createReview = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const res = await fetch("/api/reviews", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...reviewForm, isApproved: true }),
+        });
+        if (res.ok) {
+            setReviewForm(defaultReview);
+            setShowReviewForm(false);
+            fetchData();
+        }
     };
 
     const toggleReviewApproval = async (id: string, current: boolean) => {
@@ -135,7 +179,7 @@ export default function AdminDashboardPage() {
             {activeTab === "projects" && (
                 <div className="space-y-4">
                     <div className="flex gap-3">
-                        <button onClick={() => setShowForm(!showForm)}
+                        <button onClick={() => { cancelForm(); setShowForm(!showForm); }}
                             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-sm font-medium hover:bg-white/20 transition-colors">
                             <Plus className="w-4 h-4" /> {showForm ? "Cancel" : "Add Project"}
                         </button>
@@ -146,7 +190,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     {showForm && (
-                        <form onSubmit={createProject} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
+                        <form onSubmit={saveProject} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Project name" required
                                     className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
@@ -162,7 +206,7 @@ export default function AdminDashboardPage() {
                             <input value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} placeholder="Tags (comma-separated, e.g. React, Node.js)"
                                 className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
                             <button type="submit" className="px-6 py-2.5 bg-white text-black rounded-xl text-sm font-bold hover:opacity-90 transition-opacity">
-                                Create Project
+                                {editingId ? "Update Project" : "Create Project"}
                             </button>
                         </form>
                     )}
@@ -181,7 +225,12 @@ export default function AdminDashboardPage() {
                                     ))}
                                 </div>
                             </div>
-                            <button onClick={() => deleteProject(p.id)} className="text-xs text-red-400 hover:text-red-300 transition-colors shrink-0 ml-4">Delete</button>
+                            <div className="flex items-center gap-3 shrink-0 ml-4">
+                                <button onClick={() => startEdit(p)} className="flex items-center gap-1 text-xs text-neutral-400 hover:text-white transition-colors">
+                                    <Pencil className="w-3 h-3" /> Edit
+                                </button>
+                                <button onClick={() => deleteProject(p.id)} className="text-xs text-red-400 hover:text-red-300 transition-colors">Delete</button>
+                            </div>
                         </div>
                     ))}
                     {projects.length === 0 && <p className="text-sm text-neutral-500">No projects yet. Add one or seed the defaults.</p>}
@@ -190,6 +239,35 @@ export default function AdminDashboardPage() {
 
             {activeTab === "reviews" && (
                 <div className="space-y-4">
+                    <button onClick={() => setShowReviewForm(!showReviewForm)}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-sm font-medium hover:bg-white/20 transition-colors">
+                        <Plus className="w-4 h-4" /> {showReviewForm ? "Cancel" : "Add Review"}
+                    </button>
+
+                    {showReviewForm && (
+                        <form onSubmit={createReview} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input value={reviewForm.reviewerName} onChange={e => setReviewForm({ ...reviewForm, reviewerName: e.target.value })} placeholder="Reviewer name" required
+                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                <input value={reviewForm.company} onChange={e => setReviewForm({ ...reviewForm, company: e.target.value })} placeholder="Company (optional)"
+                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                            </div>
+                            <textarea value={reviewForm.content} onChange={e => setReviewForm({ ...reviewForm, content: e.target.value })} placeholder="Review comment" rows={3} required
+                                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm text-neutral-400">Rating:</span>
+                                {[1, 2, 3, 4, 5].map(n => (
+                                    <button key={n} type="button" onClick={() => setReviewForm({ ...reviewForm, rating: n })}>
+                                        <Star className={`w-5 h-5 ${n <= reviewForm.rating ? "fill-yellow-400 text-yellow-400" : "text-neutral-600"}`} />
+                                    </button>
+                                ))}
+                            </div>
+                            <button type="submit" className="px-6 py-2.5 bg-white text-black rounded-xl text-sm font-bold hover:opacity-90 transition-opacity">
+                                Add Review
+                            </button>
+                        </form>
+                    )}
+
                     {reviews.map(r => (
                         <div key={r.id} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
                             <div className="flex items-start justify-between mb-2">

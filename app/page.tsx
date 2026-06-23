@@ -7,6 +7,7 @@ import { Background } from "@/components/ui/Background";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
+import { Reviews } from "@/components/sections/Reviews";
 import { Contact } from "@/components/sections/Contact";
 import { ChatBot } from "@/components/ui/ChatBot";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
@@ -33,6 +34,7 @@ export default function Home() {
           <Hero />
           <About />
           <Projects />
+          <Reviews />
           <Contact />
         </main>
         <ChatBot />

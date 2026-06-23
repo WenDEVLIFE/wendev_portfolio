@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast, Toaster } from "react-hot-toast";
 
@@ -10,11 +10,21 @@ export function Contact() {
 
     const recaptchaRef = useRef<ReCAPTCHA>(null);
     const [isPending, setIsPending] = useState(false);
+    const [content, setContent] = useState<{
+        heading: string; description: string; email: string;
+        formLabels: { name: string; email: string; message: string };
+        formPlaceholders: { name: string; email: string; message: string };
+        sendText: string; sendingText: string; emailDirectText: string;
+    } | null>(null);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         message: ""
     });
+
+    useEffect(() => {
+        fetch("/api/content").then(r => r.json()).then(d => setContent(d.content?.contact || null)).catch(() => {});
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -62,6 +72,8 @@ export function Contact() {
         }
     };
 
+    if (!content) return null;
+
     return (
         <section id="contact" className="py-24 px-6 md:py-32 md:px-12 lg:px-32 relative">
             <Toaster position="bottom-right" />
@@ -74,19 +86,19 @@ export function Contact() {
                     className="w-full flex flex-col justify-center items-center"
                 >
                     <h2 className="bg-gradient-to-r from-white to-neutral-500 bg-clip-text text-transparent mb-6 text-4xl font-black tracking-tighter sm:text-5xl md:text-8xl">
-                        Let&apos;s Build.
+                        {content.heading}
                     </h2>
                     <p className="mx-auto mb-12 max-w-xl text-base md:text-xl text-neutral-400 font-light">
-                        Ready to elevate your digital presence? I am currently accepting strategic design and development projects.
+                        {content.description}
                     </p>
 
                     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mb-16 flex flex-col gap-4 text-left font-sans">
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="name" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">Name</label>
+                            <label htmlFor="name" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">{content.formLabels.name}</label>
                             <input
                                 type="text"
                                 id="name"
-                                placeholder="John Doe"
+                                placeholder={content.formPlaceholders.name}
                                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -94,11 +106,11 @@ export function Contact() {
                             />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="email" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">Email</label>
+                            <label htmlFor="email" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">{content.formLabels.email}</label>
                             <input
                                 type="email"
                                 id="email"
-                                placeholder="john@example.com"
+                                placeholder={content.formPlaceholders.email}
                                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -106,10 +118,10 @@ export function Contact() {
                             />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="message" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">Message</label>
+                            <label htmlFor="message" className="text-xs font-semibold uppercase tracking-widest text-neutral-500 ml-1">{content.formLabels.message}</label>
                             <textarea
                                 id="message"
-                                placeholder="How can I help you?"
+                                placeholder={content.formPlaceholders.message}
                                 rows={4}
                                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors resize-none"
                                 value={formData.message}
@@ -132,17 +144,17 @@ export function Contact() {
                             disabled={isPending}
                             className="mt-4 w-full bg-white text-black h-14 flex items-center justify-center rounded-full text-sm font-bold uppercase tracking-wider transition-transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
                         >
-                            {isPending ? "Sending..." : "Send Message"}
+                            {isPending ? content.sendingText : content.sendText}
                         </button>
                     </form>
 
                     <div className="flex flex-col items-center w-full overflow-hidden">
-                        <span className="text-xs font-semibold uppercase tracking-widest text-neutral-600 mb-6">Or email directly</span>
+                        <span className="text-xs font-semibold uppercase tracking-widest text-neutral-600 mb-6">{content.emailDirectText}</span>
                         <a
-                            href="mailto:medinajrfrouen@gmail.com"
+                            href={`mailto:${content.email}`}
                             className="group relative inline-block text-lg font-bold tracking-tight sm:text-2xl md:text-4xl text-white break-all md:break-normal px-2"
                         >
-                            medinajrfrouen@gmail.com
+                            {content.email}
                             <span className="absolute -bottom-1 md:-bottom-4 left-0 h-1 w-0 bg-white transition-all duration-500 ease-out group-hover:w-full" />
                         </a>
                     </div>

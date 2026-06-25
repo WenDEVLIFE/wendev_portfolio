@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowUpRight, X, ChevronDown } from "lucide-react";
 
 interface Project {
     id: string;
@@ -39,6 +39,8 @@ const ICON_MAP: Record<string, string> = {
 export function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [showAll, setShowAll] = useState(false);
+    const INITIAL_COUNT = 5;
     const customEasing: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
     useEffect(() => {
@@ -48,25 +50,7 @@ export function Projects() {
             .catch(() => {});
     }, []);
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                ease: customEasing
-            }
-        }
-    } as const;
-
-    const itemVariants = {
-        hidden: { y: 24, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1,
-            transition: { duration: 0.8, ease: customEasing }
-        }
-    } as const;
+    const displayed = showAll ? projects : projects.slice(0, INITIAL_COUNT);
 
     return (
         <section id="projects" className="py-24 px-6 md:py-32 md:px-12 lg:px-32">
@@ -75,24 +59,20 @@ export function Projects() {
                 <p className="text-neutral-400 text-lg">Web and mobile applications designed to solve real business problems.</p>
             </div>
 
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                className="grid gap-8 md:gap-16"
-            >
-                {projects.map((project, i) => (
+            <div className="grid gap-6 md:grid-cols-2 md:gap-8">
+                {displayed.map((project, i) => (
                     <motion.div
                         key={project.name}
-                        variants={itemVariants}
-                        className="group grid grid-cols-1 gap-8 md:grid-cols-12 items-center"
+                        initial={{ y: 24, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.6, delay: i * 0.05, ease: customEasing }}
+                        className="group rounded-[2rem] border border-white/10 bg-white/[0.02] overflow-hidden hover:border-white/20 transition-all duration-500"
                     >
                         <div
-                            className="md:col-span-7 relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 transition-all duration-700 hover:border-white/20 cursor-zoom-in"
+                            className="relative aspect-[16/10] overflow-hidden cursor-zoom-in"
                             onClick={() => project.image && setSelectedImage(project.image)}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-black/80 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none" />
                             {project.image ? (
                                 <Image
                                     src={project.image}
@@ -105,39 +85,46 @@ export function Projects() {
                                     <span className="text-neutral-600 font-mono text-xs uppercase tracking-widest">{project.name}</span>
                                 </div>
                             )}
-                        </div>
-                        <div className="md:col-span-5 flex flex-col justify-center md:pl-8">
-                            <div className="mb-6 flex gap-3">
-                                <span className="font-mono text-xs text-neutral-500 uppercase tracking-widest">0{i + 1}</span>
-                                <div className="h-px w-8 bg-neutral-700 my-auto" />
-                                <span className="font-mono text-xs text-neutral-400 uppercase tracking-widest">{project.domain}</span>
+                            <div className="absolute top-4 left-4 z-20 flex gap-2">
+                                <span className="font-mono text-[10px] text-neutral-400 bg-black/60 px-2 py-1 rounded-full">0{i + 1}</span>
+                                <span className="font-mono text-[10px] text-neutral-400 bg-black/60 px-2 py-1 rounded-full">{project.domain}</span>
                             </div>
-                            <h3 className="mb-4 md:mb-6 text-3xl md:text-4xl font-bold tracking-tighter lg:text-5xl">{project.name}</h3>
-                            <p className="mb-6 text-base md:text-lg text-neutral-400 leading-relaxed font-light">
+                        </div>
+                        <div className="p-5 md:p-6">
+                            <h3 className="mb-3 text-xl md:text-2xl font-bold tracking-tight">{project.name}</h3>
+                            <p className="mb-4 text-sm text-neutral-400 leading-relaxed font-light line-clamp-2">
                                 {project.description}
                             </p>
-                            <div className="flex flex-wrap gap-2.5 mb-8 md:mb-10">
+                            <div className="flex flex-wrap gap-2 mb-5">
                                 {project.tags.map(tag => (
-                                    <div key={tag} className="flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1.5 hover:bg-white/10 transition-colors">
+                                    <div key={tag} className="flex items-center gap-1 rounded-full bg-white/5 border border-white/10 px-2.5 py-1">
                                         {ICON_MAP[tag] && (
-                                            <Image src={ICON_MAP[tag]} alt={tag} width={14} height={14} className="w-3.5 h-3.5" />
+                                            <Image src={ICON_MAP[tag]} alt={tag} width={12} height={12} className="w-3 h-3" />
                                         )}
-                                        <span className="text-[10px] font-semibold tracking-wide text-neutral-300">
-                                            {tag}
-                                        </span>
+                                        <span className="text-[10px] font-semibold tracking-wide text-neutral-300">{tag}</span>
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex items-center gap-6">
-                                <a href={project.url} target="_blank" rel="noopener noreferrer" className="group/btn flex items-center gap-2 text-sm font-bold uppercase tracking-wider transition-colors hover:text-neutral-300">
-                                    View Project
-                                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                                </a>
-                            </div>
+                            <a href={project.url} target="_blank" rel="noopener noreferrer" className="group/btn inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors hover:text-neutral-300">
+                                View Project
+                                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                            </a>
                         </div>
                     </motion.div>
                 ))}
-            </motion.div>
+            </div>
+
+            {projects.length > INITIAL_COUNT && (
+                <div className="flex justify-center mt-12">
+                    <button
+                        onClick={() => setShowAll(!showAll)}
+                        className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-white/10 transition-all"
+                    >
+                        {showAll ? "Show Less" : `View More (${projects.length - INITIAL_COUNT} more)`}
+                        <ChevronDown className={`w-4 h-4 transition-transform ${showAll ? "rotate-180" : ""}`} />
+                    </button>
+                </div>
+            )}
 
             {/* Lightbox Modal */}
             <AnimatePresence>

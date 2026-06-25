@@ -61,7 +61,8 @@ export const DEFAULT_CONTENT: SiteContent = {
     nav: {
         links: [
             { label: "About", href: "#about" },
-            { label: "Work", href: "#projects" },
+            { label: "Projects", href: "#projects" },
+            { label: "Reviews", href: "#reviews" },
             { label: "Contact", href: "#contact" },
         ],
         businessHours: "Mon - Fri, 8AM - 5PM PH Time",

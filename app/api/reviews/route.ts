@@ -28,6 +28,26 @@ export async function POST(req: Request) {
         const body = await req.json();
         const authCheck = await verifyAdmin(req);
         const isAdmin = authCheck === null;
+
+        if (!isAdmin) {
+            const { recaptchaToken } = body;
+            if (!recaptchaToken) {
+                return NextResponse.json({ error: "Please complete the reCAPTCHA verification." }, { status: 400 });
+            }
+            const params = new URLSearchParams();
+            params.append("secret", process.env.RECAPTCHA_SECRET_KEY || "");
+            params.append("response", recaptchaToken);
+            const recaptchaRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: params.toString(),
+            });
+            const recaptchaData = await recaptchaRes.json();
+            if (!recaptchaData.success) {
+                return NextResponse.json({ error: "reCAPTCHA verification failed. Please try again." }, { status: 400 });
+            }
+        }
+
         const isApproved = isAdmin ? (body.isApproved ?? true) : false;
 
         const docRef = await getCollection().add({

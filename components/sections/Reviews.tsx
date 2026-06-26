@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MessageSquare, Plus } from "lucide-react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-hot-toast";
 
 interface Review {
@@ -26,6 +27,7 @@ export function Reviews() {
         content: ""
     });
     const [isPending, setIsPending] = useState(false);
+    const recaptchaRef = useRef<ReCAPTCHA>(null);
 
     const customEasing: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -49,13 +51,22 @@ export function Reviews() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const token = recaptchaRef.current?.getValue();
+        if (!token) {
+            toast.error("Please complete the reCAPTCHA verification.", {
+                style: { borderRadius: "100px", background: "#333", color: "#fff" }
+            });
+            return;
+        }
+
         setIsPending(true);
 
         try {
             const res = await fetch("/api/reviews", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ ...formData, recaptchaToken: token }),
             });
 
             if (res.ok) {
@@ -64,6 +75,7 @@ export function Reviews() {
                 });
                 setFormData({ reviewerName: "", company: "", rating: 5, content: "" });
                 setShowForm(false);
+                recaptchaRef.current?.reset();
                 fetchReviews();
             } else {
                 const data = await res.json();
@@ -178,6 +190,14 @@ export function Reviews() {
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                     required
                                 ></textarea>
+                            </div>
+
+                            <div className="flex justify-center">
+                                <ReCAPTCHA
+                                    ref={recaptchaRef}
+                                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                                    theme="dark"
+                                />
                             </div>
 
                             <button

@@ -28,17 +28,6 @@ About Frouen Medina Jr.:
 - Role: Full Stack Developer & Designer.
 - Expertise: Flutter, React, Node.js, Cloud Technologies (Firebase, Docker, Supabase), and AI (TensorFlow).
 - Production Apps: Over 10+ production-ready applications.
-- Key Projects:
-  1. SudoTech+: Startup website for his company (sudotech.plus).
-  2. Aid Anchor: Mobile app for first aid and disaster response (Flutter/Dart).
-  3. ClassAce: Student management app (Kotlin/Firebase).
-  4. DPR CAR RENTAL: AI-managed car rental system.
-  5. NaveyGate: Gate pass and digital navigation platform.
-  6. Mandaya App: Cultural/Educational mobile app.
-- Tech Stack: 
-  - Mobile: Flutter, Kotlin, Jetpack Compose, Swift, Java.
-  - Web/Backend: React, Next.js, Node.js, Python, PostgreSQL, MongoDB.
-  - Tools/Ops: Docker, Firebase, Supabase, TensorFlow.
 - Professional Ethos: Passionate about crafting premium digital experiences with absolute precision.
 - Availability: Monday to Friday, 8 AM - 5 PM (PH Time / UTC+8).
 

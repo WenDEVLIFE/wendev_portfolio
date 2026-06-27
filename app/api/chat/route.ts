@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getRagContext } from "@/lib/rag";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
 
@@ -92,7 +93,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ reply: "I can't assist with that request. Feel free to ask about Frouen's projects and experience!" });
         }
 
-        const systemMsg = { role: "system" as const, content: SYSTEM_PROMPT };
+        const ragContext = await getRagContext(message);
+        const systemContent = ragContext
+            ? `${SYSTEM_PROMPT}\n\nRELEVANT CONTEXT FROM PORTFOLIO:\n${ragContext}\n\nUse the above context to answer accurately. If the context doesn't have the answer, rely on your training data.`
+            : SYSTEM_PROMPT;
+
+        const systemMsg = { role: "system" as const, content: systemContent };
         const userMsg = { role: "user" as const, content: message };
 
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {

@@ -54,11 +54,18 @@ export function Navbar() {
         >
             <div className="flex items-center">
                 <Image
+                    src="/assets/logo/NAVY-BLUE-LOGO-PNG.png"
+                    alt={content.logoAlt}
+                    width={100}
+                    height={32}
+                    className="h-6 md:h-8 w-auto object-contain block dark:hidden"
+                />
+                <Image
                     src={content.logo}
                     alt={content.logoAlt}
                     width={100}
                     height={32}
-                    className="h-6 md:h-8 w-auto object-contain"
+                    className="h-6 md:h-8 w-auto object-contain hidden dark:block"
                 />
             </div>
 
@@ -102,13 +109,6 @@ export function Navbar() {
                             {content.links.map(link => (
                                 <a key={link.href} href={link.href} onClick={() => setIsMobileMenuOpen(false)} className="hover:text-foreground transition-colors">{link.label}</a>
                             ))}
-                            <div className="flex items-center justify-center gap-2 rounded-full border border-border bg-muted px-5 py-3 text-sm font-semibold text-muted-foreground w-full mt-2 tracking-wider">
-                                <span className="relative flex h-2 w-2">
-                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-                                </span>
-                                {content.businessHours}
-                            </div>
                             {mounted && (
                                 <button
                                     onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}

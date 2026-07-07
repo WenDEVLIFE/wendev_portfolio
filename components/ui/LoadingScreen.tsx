@@ -85,11 +85,18 @@ export const LoadingScreen = () => {
                             className="relative w-32 h-32 md:w-48 md:h-48"
                         >
                             <Image
+                                src="/assets/logo/NAVY-BLUE-LOGO-PNG.png"
+                                alt="Wendev Logo"
+                                fill
+                                priority
+                                className="object-contain block dark:hidden"
+                            />
+                            <Image
                                 src="/assets/logo/WHITE-LOGO-PNG.png"
                                 alt="Wendev Logo"
                                 fill
                                 priority
-                                className="object-contain"
+                                className="object-contain hidden dark:block"
                             />
                         </motion.div>
 

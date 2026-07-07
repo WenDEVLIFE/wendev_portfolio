@@ -13,14 +13,14 @@ export function Footer() {
     if (!content) return null;
 
     return (
-        <footer className="mx-auto max-w-7xl mb-8 flex flex-col items-center justify-between gap-6 px-6 py-8 text-xs font-medium uppercase tracking-widest text-neutral-500 md:flex-row text-center md:text-left">
+        <footer className="mx-auto max-w-7xl mb-8 flex flex-col items-center justify-between gap-6 px-6 py-8 text-xs font-medium uppercase tracking-widest text-muted-foreground/70 md:flex-row text-center md:text-left">
             <div className="flex flex-col md:flex-row items-center gap-3">
                 <Code2 className="h-4 w-4 hidden md:block" />
                 <span>{content.copyright}</span>
             </div>
             <div className="flex flex-wrap justify-center gap-6 md:gap-8">
                 {content.links.map(link => (
-                    <a key={link.href} href={link.href} className="hover:text-white transition-colors">{link.label}</a>
+                    <a key={link.href} href={link.href} className="hover:text-foreground transition-colors">{link.label}</a>
                 ))}
             </div>
         </footer>

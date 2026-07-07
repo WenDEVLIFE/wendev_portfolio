@@ -27,12 +27,12 @@ export function Hero() {
                 transition={{ duration: 1.2, ease: customEasing }}
                 className="relative mb-8 h-32 w-32 md:h-40 md:w-40 rounded-full"
             >
-                <div className="absolute inset-0 rounded-full bg-neutral-500/30 blur-2xl animate-pulse" />
+                <div className="absolute inset-0 rounded-full bg-muted-foreground/20 blur-2xl animate-pulse" />
                 <Image
                     src={content.profileImage}
                     alt="Frouen Medina Jr."
                     fill
-                    className="rounded-full object-cover border border-white/10 relative z-10"
+                    className="rounded-full object-cover border border-border relative z-10"
                     priority
                 />
             </motion.div>
@@ -41,7 +41,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3, ease: customEasing }}
-                className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-neutral-300 uppercase tracking-widest"
+                className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted px-4 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-widest"
             >
                 <span className="relative flex h-1.5 w-1.5">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
@@ -54,7 +54,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 1.2, delay: 0.2, ease: customEasing }}
-                className="bg-gradient-to-r from-white to-neutral-500 bg-clip-text text-transparent mb-6 text-5xl font-black tracking-tighter sm:text-7xl md:text-8xl lg:text-[10rem] leading-[1]"
+                className="bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent mb-6 text-5xl font-black tracking-tighter sm:text-7xl md:text-8xl lg:text-[10rem] leading-[1]"
                 dangerouslySetInnerHTML={{ __html: content.name }}
             />
 
@@ -62,7 +62,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.2, ease: customEasing }}
-                className="max-w-2xl px-4 text-base text-neutral-400 sm:text-lg md:text-2xl font-light tracking-tight"
+                className="max-w-2xl px-4 text-base text-muted-foreground sm:text-lg md:text-2xl font-light tracking-tight"
             >
                 {content.tagline}
             </motion.p>
@@ -73,10 +73,10 @@ export function Hero() {
                 transition={{ duration: 1, delay: 0.5, ease: customEasing }}
                 className="mt-12 flex flex-col sm:flex-row flex-wrap justify-center gap-4 px-4 w-full sm:w-auto"
             >
-                <a href={content.ctaPrimary.href} className="bg-white text-black h-14 flex items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-wider transition-transform hover:scale-[1.02] w-full sm:w-auto">
+                <a href={content.ctaPrimary.href} className="bg-accent text-accent-foreground h-14 flex items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-wider transition-transform hover:scale-[1.02] w-full sm:w-auto">
                     {content.ctaPrimary.label}
                 </a>
-                <a href={content.ctaSecondary.href} target="_blank" rel="noopener noreferrer" className="bg-transparent text-white border border-white/20 h-14 flex items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-wider transition-all hover:bg-white/5 w-full sm:w-auto">
+                <a href={content.ctaSecondary.href} target="_blank" rel="noopener noreferrer" className="bg-transparent text-foreground border border-border h-14 flex items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-wider transition-all hover:bg-muted w-full sm:w-auto">
                     {content.ctaSecondary.label}
                 </a>
             </motion.div>

@@ -197,18 +197,18 @@ export default function AdminDashboardPage() {
         <div className="p-6 max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-2xl font-bold tracking-tight">Admin Dashboard</h1>
-                <button onClick={handleLogout} className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors">
+                <button onClick={handleLogout} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                     <LogOut className="w-4 h-4" /> Sign Out
                 </button>
             </div>
 
             <div className="flex gap-4 mb-8">
                 <button onClick={() => setActiveTab("projects")}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "projects" ? "bg-white/10 text-white" : "text-neutral-400 hover:text-white"}`}>
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "projects" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
                     <FolderKanban className="w-4 h-4" /> Projects ({projects.length})
                 </button>
                 <button onClick={() => setActiveTab("reviews")}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "reviews" ? "bg-white/10 text-white" : "text-neutral-400 hover:text-white"}`}>
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${activeTab === "reviews" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
                     <MessageSquareText className="w-4 h-4" /> Reviews ({reviews.length})
                 </button>
             </div>
@@ -217,101 +217,101 @@ export default function AdminDashboardPage() {
                 <div className="space-y-4">
                     <div className="flex gap-3">
                         <button onClick={() => { cancelForm(); setShowForm(!showForm); }}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-sm font-medium hover:bg-white/20 transition-colors">
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted text-sm font-medium hover:bg-muted/80 transition-colors">
                             <Plus className="w-4 h-4" /> {showForm ? "Cancel" : "Add Project"}
                         </button>
                         <button onClick={seedProjects} disabled={seeding}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-medium text-neutral-400 hover:text-white transition-colors">
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted border border-border text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             <Upload className="w-4 h-4" /> {seeding ? "Seeding..." : "Seed Default Projects"}
                         </button>
                     </div>
 
                     {showForm && (
-                        <form onSubmit={saveProject} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
+                        <form onSubmit={saveProject} className="rounded-2xl border border-border bg-card p-5 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Project name" required
-                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                    className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                                 <input value={form.domain} onChange={e => setForm({ ...form, domain: e.target.value })} placeholder="Domain (e.g. sudotech.plus)"
-                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                    className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                                 <input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })} placeholder="Project URL"
-                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                    className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                                 <input value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} placeholder="Image path (e.g. /assets/...)"
-                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                    className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                             </div>
                             <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Description" rows={2} required
-                                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                className="w-full rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                             <input value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} placeholder="Tags (comma-separated, e.g. React, Node.js)"
-                                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
-                            <button type="submit" className="px-6 py-2.5 bg-white text-black rounded-xl text-sm font-bold hover:opacity-90 transition-opacity">
+                                className="w-full rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
+                            <button type="submit" className="px-6 py-2.5 bg-accent text-accent-foreground rounded-xl text-sm font-bold hover:opacity-90 transition-opacity">
                                 {editingId ? "Update Project" : "Create Project"}
                             </button>
                         </form>
                     )}
 
                     {projects.map(p => (
-                        <div key={p.id} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 flex items-start justify-between">
+                        <div key={p.id} className="rounded-2xl border border-border bg-card p-5 flex items-start justify-between">
                             <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-3 flex-wrap">
                                     <h3 className="font-semibold">{p.name}</h3>
-                                    {p.domain && <span className="text-[10px] font-mono text-neutral-500">{p.domain}</span>}
+                                    {p.domain && <span className="text-[10px] font-mono text-muted-foreground">{p.domain}</span>}
                                 </div>
-                                <p className="text-sm text-neutral-400 mt-1">{p.description}</p>
+                                <p className="text-sm text-muted-foreground mt-1">{p.description}</p>
                                 <div className="flex flex-wrap gap-2 mt-3">
                                     {(p.tags || []).map(t => (
-                                        <span key={t} className="text-[10px] font-medium text-neutral-500 bg-white/5 px-2 py-1 rounded-full border border-white/10">{t}</span>
+                                        <span key={t} className="text-[10px] font-medium text-muted-foreground bg-muted px-2 py-1 rounded-full border border-border">{t}</span>
                                     ))}
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 shrink-0 ml-4">
-                                <button onClick={() => startEdit(p)} className="flex items-center gap-1 text-xs text-neutral-400 hover:text-white transition-colors">
+                                <button onClick={() => startEdit(p)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
                                     <Pencil className="w-3 h-3" /> Edit
                                 </button>
                                 <button onClick={() => deleteProject(p.id)} className="text-xs text-red-400 hover:text-red-300 transition-colors">Delete</button>
                             </div>
                         </div>
                     ))}
-                    {projects.length === 0 && <p className="text-sm text-neutral-500">No projects yet. Add one or seed the defaults.</p>}
+                    {projects.length === 0 && <p className="text-sm text-muted-foreground">No projects yet. Add one or seed the defaults.</p>}
                 </div>
             )}
 
             {activeTab === "reviews" && (
                 <div className="space-y-4">
                     <button onClick={() => setShowReviewForm(!showReviewForm)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-sm font-medium hover:bg-white/20 transition-colors">
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted text-sm font-medium hover:bg-muted/80 transition-colors">
                         <Plus className="w-4 h-4" /> {showReviewForm ? "Cancel" : "Add Review"}
                     </button>
 
                     {showReviewForm && (
-                        <form onSubmit={createReview} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
+                        <form onSubmit={createReview} className="rounded-2xl border border-border bg-card p-5 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input value={reviewForm.reviewerName} onChange={e => setReviewForm({ ...reviewForm, reviewerName: e.target.value })} placeholder="Reviewer name" required
-                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                    className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                                 <input value={reviewForm.company} onChange={e => setReviewForm({ ...reviewForm, company: e.target.value })} placeholder="Company (optional)"
-                                    className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                    className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                             </div>
                             <textarea value={reviewForm.content} onChange={e => setReviewForm({ ...reviewForm, content: e.target.value })} placeholder="Review comment" rows={3} required
-                                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30" />
+                                className="w-full rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                             <div className="flex items-center gap-2">
-                                <span className="text-sm text-neutral-400">Rating:</span>
+                                <span className="text-sm text-muted-foreground">Rating:</span>
                                 {[1, 2, 3, 4, 5].map(n => (
                                     <button key={n} type="button" onClick={() => setReviewForm({ ...reviewForm, rating: n })}>
-                                        <Star className={`w-5 h-5 ${n <= reviewForm.rating ? "fill-yellow-400 text-yellow-400" : "text-neutral-600"}`} />
+                                        <Star className={`w-5 h-5 ${n <= reviewForm.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/30"}`} />
                                     </button>
                                 ))}
                             </div>
-                            <button type="submit" className="px-6 py-2.5 bg-white text-black rounded-xl text-sm font-bold hover:opacity-90 transition-opacity">
+                            <button type="submit" className="px-6 py-2.5 bg-accent text-accent-foreground rounded-xl text-sm font-bold hover:opacity-90 transition-opacity">
                                 Add Review
                             </button>
                         </form>
                     )}
 
                     {reviews.map(r => (
-                        <div key={r.id} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                        <div key={r.id} className="rounded-2xl border border-border bg-card p-5">
                             <div className="flex items-start justify-between mb-2">
                                 <div>
                                     <span className="font-semibold text-sm">{r.reviewerName}</span>
-                                    {r.company && <span className="text-xs text-neutral-500 ml-2">{r.company}</span>}
-                                    <span className="text-xs text-neutral-600 ml-3">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+                                    {r.company && <span className="text-xs text-muted-foreground ml-2">{r.company}</span>}
+                                    <span className="text-xs text-muted-foreground/60 ml-3">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <button onClick={() => toggleReviewApproval(r.id, r.isApproved)}
@@ -321,10 +321,10 @@ export default function AdminDashboardPage() {
                                     <button onClick={() => deleteReview(r.id)} className="text-xs text-red-400 hover:text-red-300 transition-colors">Delete</button>
                                 </div>
                             </div>
-                            <p className="text-sm text-neutral-400">{r.content}</p>
+                            <p className="text-sm text-muted-foreground">{r.content}</p>
                         </div>
                     ))}
-                    {reviews.length === 0 && <p className="text-sm text-neutral-500">No reviews yet.</p>}
+                    {reviews.length === 0 && <p className="text-sm text-muted-foreground">No reviews yet.</p>}
                 </div>
             )}
         </div>

@@ -1,6 +1,26 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --accent: #0a0a0a;
+  --accent-foreground: #ffffff;
+  --muted: #f0f0f0;
+  --muted-foreground: #666666;
+  --border: rgba(0, 0, 0, 0.08);
+  --card: rgba(255, 255, 255, 0.8);
+  --glass: rgba(255, 255, 255, 0.7);
+  --selection-bg: rgba(0, 0, 0, 0.1);
+  --selection-fg: #0a0a0a;
+  --ring: rgba(0, 0, 0, 0.15);
+  --toast-bg: #f0f0f0;
+  --toast-fg: #0a0a0a;
+  --toast-border: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
   --background: #030303;
   --foreground: #f0f0f0;
   --accent: #ffffff;
@@ -8,7 +28,14 @@
   --muted: #111111;
   --muted-foreground: #888888;
   --border: rgba(255, 255, 255, 0.06);
+  --card: rgba(255, 255, 255, 0.02);
   --glass: rgba(255, 255, 255, 0.02);
+  --selection-bg: rgba(255, 255, 255, 0.2);
+  --selection-fg: #f0f0f0;
+  --ring: rgba(255, 255, 255, 0.15);
+  --toast-bg: #171717;
+  --toast-fg: #fff;
+  --toast-border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
@@ -19,10 +46,17 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-card: var(--card);
   --color-glass: var(--glass);
+  --color-ring: var(--ring);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --ease-custom: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 @layer base {

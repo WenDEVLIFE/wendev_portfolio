@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
@@ -27,23 +28,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster 
-          position="bottom-right" 
-          toastOptions={{ 
-            style: { 
-              background: "#171717", 
-              color: "#fff", 
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "12px",
-              fontSize: "14px"
-            } 
-          }} 
-        />
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          {children}
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: "var(--toast-bg, #171717)",
+                color: "var(--toast-fg, #fff)",
+                border: "1px solid var(--toast-border, rgba(255,255,255,0.1))",
+                borderRadius: "12px",
+                fontSize: "14px"
+              }
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );

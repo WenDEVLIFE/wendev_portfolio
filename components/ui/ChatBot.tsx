@@ -28,7 +28,7 @@ function LoadingDots() {
     }, []);
 
     return (
-        <span className="font-mono text-neutral-500 tracking-wider">{dots}</span>
+        <span className="font-mono text-muted-foreground/70 tracking-wider">{dots}</span>
     );
 }
 
@@ -59,17 +59,17 @@ function TypewriterContent({ content }: { content: string }) {
                 components={{
                     ul: ({ children }) => <ul className="list-disc list-inside space-y-1 my-1.5">{children}</ul>,
                     ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 my-1.5">{children}</ol>,
-                    li: ({ children }) => <li className="text-neutral-300">{children}</li>,
+                    li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
                     table: ({ children }) => (
                         <div className="overflow-x-auto my-2">
                             <table className="w-full text-left text-xs border-collapse">{children}</table>
                         </div>
                     ),
-                    th: ({ children }) => <th className="border border-white/10 px-2.5 py-1.5 font-semibold text-white/80">{children}</th>,
-                    td: ({ children }) => <td className="border border-white/10 px-2.5 py-1.5 text-neutral-400">{children}</td>,
-                    strong: ({ children }) => <strong className="font-semibold text-white/90">{children}</strong>,
-                    p: ({ children }) => <p className="my-1 text-neutral-300">{children}</p>,
-                    code: ({ children }) => <code className="bg-white/5 px-1 rounded text-[11px] font-mono text-neutral-300">{children}</code>,
+                    th: ({ children }) => <th className="border border-border px-2.5 py-1.5 font-semibold text-foreground/80">{children}</th>,
+                    td: ({ children }) => <td className="border border-border px-2.5 py-1.5 text-muted-foreground">{children}</td>,
+                    strong: ({ children }) => <strong className="font-semibold text-foreground/90">{children}</strong>,
+                    p: ({ children }) => <p className="my-1 text-muted-foreground">{children}</p>,
+                    code: ({ children }) => <code className="bg-muted px-1 rounded text-[11px] font-mono text-muted-foreground">{children}</code>,
                 }}
             >
                 {displayed}
@@ -78,7 +78,7 @@ function TypewriterContent({ content }: { content: string }) {
                 <motion.span
                     animate={{ opacity: [1, 0] }}
                     transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }}
-                    className="inline-block w-[2px] h-[14px] bg-neutral-400 ml-0.5 align-middle"
+                    className="inline-block w-[2px] h-[14px] bg-muted-foreground ml-0.5 align-middle"
                 />
             )}
         </>
@@ -87,7 +87,7 @@ function TypewriterContent({ content }: { content: string }) {
 
 function BotMessage({ content }: { content: string }) {
     return (
-        <div className="bg-white/5 border border-white/10 text-neutral-300 max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed">
+        <div className="bg-muted border border-border text-muted-foreground max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed">
             <TypewriterContent content={content} />
         </div>
     );
@@ -170,7 +170,7 @@ export function ChatBot() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/40 z-[90] md:bg-transparent md:pointer-events-none"
+                        className="fixed inset-0 bg-black/20 dark:bg-black/40 z-[90] md:bg-transparent md:pointer-events-none"
                         onClick={() => setIsOpen(false)}
                     />
                 )}
@@ -183,17 +183,17 @@ export function ChatBot() {
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ type: "spring", damping: 28, stiffness: 300 }}
-                        className="fixed top-0 right-0 z-[100] h-full w-full sm:w-[420px] bg-black/95 backdrop-blur-2xl border-l border-white/10 flex flex-col shadow-2xl"
+                        className="fixed top-0 right-0 z-[100] h-full w-full sm:w-[420px] bg-white/95 dark:bg-black/95 backdrop-blur-2xl border-l border-border flex flex-col shadow-2xl"
                     >
-                        <div className="p-5 pb-3 border-b border-white/10 flex items-center justify-between shrink-0">
+                        <div className="p-5 pb-3 border-b border-border flex items-center justify-between shrink-0">
                             <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-white/80 tracking-[0.2em]">CHATBOT</span>
+                                <span className="text-xs font-bold text-foreground/80 tracking-[0.2em]">CHATBOT</span>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                                className="p-1.5 hover:bg-muted rounded-full transition-colors"
                             >
-                                <X className="w-4 h-4 text-neutral-500" />
+                                <X className="w-4 h-4 text-muted-foreground" />
                             </button>
                         </div>
 
@@ -206,29 +206,29 @@ export function ChatBot() {
                                     className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                                 >
                                     {msg.role === "user" ? (
-                                        <div className="bg-white text-black font-medium max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed">
+                                        <div className="bg-accent text-accent-foreground font-medium max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed">
                                             {msg.content}
                                         </div>
                                     ) : i === messages.length - 1 && !isLoading ? (
                                         <BotMessage content={msg.content} key={botKey} />
                                     ) : (
-                                        <div className="bg-white/5 border border-white/10 text-neutral-300 max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed">
+                                        <div className="bg-muted border border-border text-muted-foreground max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed">
                                             <ReactMarkdown
                                                 remarkPlugins={[remarkGfm]}
                                                 components={{
                                                     ul: ({ children }) => <ul className="list-disc list-inside space-y-1 my-1.5">{children}</ul>,
                                                     ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 my-1.5">{children}</ol>,
-                                                    li: ({ children }) => <li className="text-neutral-300">{children}</li>,
+                                                    li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
                                                     table: ({ children }) => (
                                                         <div className="overflow-x-auto my-2">
                                                             <table className="w-full text-left text-xs border-collapse">{children}</table>
                                                         </div>
                                                     ),
-                                                    th: ({ children }) => <th className="border border-white/10 px-2.5 py-1.5 font-semibold text-white/80">{children}</th>,
-                                                    td: ({ children }) => <td className="border border-white/10 px-2.5 py-1.5 text-neutral-400">{children}</td>,
-                                                    strong: ({ children }) => <strong className="font-semibold text-white/90">{children}</strong>,
-                                                    p: ({ children }) => <p className="my-1 text-neutral-300">{children}</p>,
-                                                    code: ({ children }) => <code className="bg-white/5 px-1 rounded text-[11px] font-mono text-neutral-300">{children}</code>,
+                                                    th: ({ children }) => <th className="border border-border px-2.5 py-1.5 font-semibold text-foreground/80">{children}</th>,
+                                                    td: ({ children }) => <td className="border border-border px-2.5 py-1.5 text-muted-foreground">{children}</td>,
+                                                    strong: ({ children }) => <strong className="font-semibold text-foreground/90">{children}</strong>,
+                                                    p: ({ children }) => <p className="my-1 text-muted-foreground">{children}</p>,
+                                                    code: ({ children }) => <code className="bg-muted px-1 rounded text-[11px] font-mono text-muted-foreground">{children}</code>,
                                                 }}
                                             >
                                                 {msg.content}
@@ -239,8 +239,8 @@ export function ChatBot() {
                             ))}
                             {isLoading && (
                                 <div className="flex justify-start">
-                                    <div className="bg-white/5 border border-white/10 px-4 py-3 rounded-2xl">
-                                        <span className="font-mono text-sm text-neutral-400">generating</span>
+                                    <div className="bg-muted border border-border px-4 py-3 rounded-2xl">
+                                        <span className="font-mono text-sm text-muted-foreground">generating</span>
                                         <LoadingDots />
                                     </div>
                                 </div>
@@ -248,7 +248,7 @@ export function ChatBot() {
                             <div ref={messagesEndRef} />
                         </div>
 
-                        <div className="p-5 pt-3 border-t border-white/10 shrink-0">
+                        <div className="p-5 pt-3 border-t border-border shrink-0">
                             <form
                                 onSubmit={(e) => { e.preventDefault(); handleSend(); }}
                                 className="flex items-center gap-2"
@@ -257,11 +257,11 @@ export function ChatBot() {
                                     <button
                                         type="button"
                                         onClick={() => setShowModelPicker(!showModelPicker)}
-                                        className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[10px] font-medium text-neutral-500 hover:text-white hover:border-white/20 transition-colors"
+                                        className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-muted border border-border text-[10px] font-medium text-muted-foreground hover:text-foreground hover:border-ring transition-colors"
                                     >
-                                        <span className="text-neutral-600 mr-0.5">-=-</span>
+                                        <span className="text-muted-foreground/60 mr-0.5">-=-</span>
                                         {model.label}
-                                        <span className="text-neutral-600 ml-0.5">-=-</span>
+                                        <span className="text-muted-foreground/60 ml-0.5">-=-</span>
                                         <ChevronDown className={`w-3 h-3 transition-transform ${showModelPicker ? "rotate-180" : ""}`} />
                                     </button>
                                     <AnimatePresence>
@@ -271,7 +271,7 @@ export function ChatBot() {
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: -4, scale: 0.95 }}
                                                 transition={{ duration: 0.15 }}
-                                                className="absolute left-0 bottom-full mb-2 w-40 bg-black/95 border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-2xl z-50"
+                                                className="absolute left-0 bottom-full mb-2 w-40 bg-white/95 dark:bg-black/95 border border-border rounded-xl overflow-hidden shadow-2xl backdrop-blur-2xl z-50"
                                             >
                                                 {MODELS.map((m) => (
                                                     <button
@@ -279,8 +279,8 @@ export function ChatBot() {
                                                         type="button"
                                                         onClick={() => { setModel(m); setShowModelPicker(false); }}
                                                         className={`w-full text-left px-3.5 py-2.5 text-xs font-medium transition-colors ${model.id === m.id
-                                                            ? "bg-white/10 text-white"
-                                                            : "text-neutral-400 hover:text-white hover:bg-white/5"
+                                                            ? "bg-accent text-accent-foreground"
+                                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                                             }`}
                                                     >
                                                         {m.label}
@@ -301,16 +301,16 @@ export function ChatBot() {
                                         }}
                                         placeholder="Ask about projects..."
                                         maxLength={charLimit}
-                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 pr-14 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/30 transition-colors"
+                                        className="w-full bg-muted border border-border rounded-xl px-4 py-2.5 pr-14 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors"
                                     />
-                                    <span className="absolute right-3 bottom-2.5 text-[10px] font-mono text-neutral-600 pointer-events-none">
+                                    <span className="absolute right-3 bottom-2.5 text-[10px] font-mono text-muted-foreground/60 pointer-events-none">
                                         {input.length}/{charLimit}
                                     </span>
                                 </div>
                                 <button
                                     type="submit"
                                     disabled={!input.trim() || isLoading || input.length > charLimit}
-                                    className="p-2.5 bg-white text-black rounded-xl disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shrink-0"
+                                    className="p-2.5 bg-accent text-accent-foreground rounded-xl disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shrink-0"
                                 >
                                     <Send className="w-4 h-4" />
                                 </button>
@@ -325,10 +325,10 @@ export function ChatBot() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(!isOpen)}
                 style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 90 }}
-                className="bg-white text-black p-4 rounded-full shadow-2xl flex items-center justify-center relative"
+                className="bg-accent text-accent-foreground p-4 rounded-full shadow-2xl flex items-center justify-center relative"
             >
                 <MessageSquare className="w-6 h-6" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-black" />
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
             </motion.button>
         </>
     );

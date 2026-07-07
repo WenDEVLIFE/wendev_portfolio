@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
             <form onSubmit={handleLogin} className="w-full max-w-sm space-y-6">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Admin Access</h1>
-                    <p className="text-sm text-neutral-500 mt-1">Sign in to manage your portfolio.</p>
+                    <p className="text-sm text-muted-foreground mt-1">Sign in to manage your portfolio.</p>
                 </div>
 
                 {error && (
@@ -60,7 +60,7 @@ export default function AdminLoginPage() {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         required
-                        className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors"
+                        className="w-full rounded-xl bg-muted border border-border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors"
                     />
                     <input
                         type="password"
@@ -68,14 +68,14 @@ export default function AdminLoginPage() {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         required
-                        className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/30 transition-colors"
+                        className="w-full rounded-xl bg-muted border border-border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors"
                     />
                 </div>
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full rounded-xl bg-white text-black py-3 text-sm font-bold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50"
+                    className="w-full rounded-xl bg-accent text-accent-foreground py-3 text-sm font-bold tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50"
                 >
                     {loading ? "Signing in..." : "Sign In"}
                 </button>

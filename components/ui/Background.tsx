@@ -1,43 +1,61 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export function Background() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
+
     return (
         <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 bg-background">
             {/* Subtle Grid Pattern Overlay */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-60 dark:opacity-40" />
 
-            {/* Animated Glowing Orbs */}
-            <motion.div
-                animate={{
-                    x: [0, 100, -50, 0],
-                    y: [0, -50, 100, 0],
-                    scale: [1, 1.2, 0.9, 1],
-                }}
-                transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-[20%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-emerald-500/[0.03] dark:bg-emerald-500/10 blur-[120px] mix-blend-normal dark:mix-blend-screen"
-            />
-
-            <motion.div
-                animate={{
-                    x: [0, -100, 50, 0],
-                    y: [0, 100, -50, 0],
-                    scale: [0.9, 1.3, 1, 0.9],
-                }}
-                transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-indigo-500/[0.03] dark:bg-indigo-500/10 blur-[120px] mix-blend-normal dark:mix-blend-screen"
-            />
-
-            <motion.div
-                animate={{
-                    x: [0, 50, -100, 0],
-                    y: [0, -100, 50, 0],
-                    scale: [1.1, 0.8, 1.2, 1.1],
-                }}
-                transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-[20%] left-[20%] w-[70vw] h-[70vw] rounded-full bg-purple-500/[0.03] dark:bg-purple-500/10 blur-[120px] mix-blend-normal dark:mix-blend-screen"
-            />
+            {/* Animated Glowing Orbs — static on mobile, animated on desktop */}
+            {isMobile ? (
+                <>
+                    <div className="absolute -top-[20%] -left-[10%] w-[40vw] h-[40vw] rounded-full bg-emerald-500/[0.03] dark:bg-emerald-500/10 blur-[80px]" />
+                    <div className="absolute top-[20%] -right-[10%] w-[50vw] h-[50vw] rounded-full bg-indigo-500/[0.03] dark:bg-indigo-500/10 blur-[80px]" />
+                    <div className="absolute -bottom-[20%] left-[20%] w-[50vw] h-[50vw] rounded-full bg-purple-500/[0.03] dark:bg-purple-500/10 blur-[80px]" />
+                </>
+            ) : (
+                <>
+                    <motion.div
+                        animate={{
+                            x: [0, 100, -50, 0],
+                            y: [0, -50, 100, 0],
+                            scale: [1, 1.2, 0.9, 1],
+                        }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute -top-[20%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-emerald-500/[0.03] dark:bg-emerald-500/10 blur-[120px] mix-blend-normal dark:mix-blend-screen"
+                    />
+                    <motion.div
+                        animate={{
+                            x: [0, -100, 50, 0],
+                            y: [0, 100, -50, 0],
+                            scale: [0.9, 1.3, 1, 0.9],
+                        }}
+                        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute top-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-indigo-500/[0.03] dark:bg-indigo-500/10 blur-[120px] mix-blend-normal dark:mix-blend-screen"
+                    />
+                    <motion.div
+                        animate={{
+                            x: [0, 50, -100, 0],
+                            y: [0, -100, 50, 0],
+                            scale: [1.1, 0.8, 1.2, 1.1],
+                        }}
+                        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute -bottom-[20%] left-[20%] w-[70vw] h-[70vw] rounded-full bg-purple-500/[0.03] dark:bg-purple-500/10 blur-[120px] mix-blend-normal dark:mix-blend-screen"
+                    />
+                </>
+            )}
 
             {/* Deep intense central glow */}
             <div className="absolute top-[10vh] left-[50vw] w-[100vw] h-[80vh] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.02)_0%,transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />

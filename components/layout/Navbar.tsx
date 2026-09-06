@@ -37,7 +37,21 @@ export function Navbar() {
         fetch("/api/content").then(r => r.json()).then(d => setContent(d.content?.nav || null)).catch(() => {});
     }, []);
 
-    if (!content) return null;
+    if (!content) {
+        return (
+            <div className="sticky top-6 z-50 mx-4 md:mx-auto bg-card backdrop-blur-[24px] border border-border rounded-full py-3 px-6 shadow-2xl shadow-black/20 dark:shadow-black/50">
+                <div className="flex items-center justify-between">
+                    <div className="h-6 w-24 bg-muted rounded animate-pulse" />
+                    <div className="hidden md:flex gap-4">
+                        <div className="h-4 w-12 bg-muted rounded animate-pulse" />
+                        <div className="h-4 w-12 bg-muted rounded animate-pulse" />
+                        <div className="h-4 w-12 bg-muted rounded animate-pulse" />
+                    </div>
+                    <div className="md:hidden h-6 w-6 bg-muted rounded animate-pulse" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <motion.nav

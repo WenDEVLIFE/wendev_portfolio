@@ -73,7 +73,16 @@ export function Contact() {
         }
     };
 
-    if (!content) return null;
+    if (!content) {
+        return (
+            <section id="contact" className="py-24 px-6 md:py-32 md:px-12 lg:px-32 relative">
+                <div className="border border-border bg-card backdrop-blur-3xl rounded-[2rem] md:rounded-[3rem] py-20 px-4 md:py-32 md:px-6 text-center">
+                    <div className="h-12 w-48 bg-muted rounded-xl animate-pulse mx-auto" />
+                    <div className="h-6 w-80 bg-muted rounded-lg animate-pulse mx-auto mt-4" />
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section id="contact" className="py-24 px-6 md:py-32 md:px-12 lg:px-32 relative">

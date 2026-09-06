@@ -10,7 +10,13 @@ export function Footer() {
         fetch("/api/content").then(r => r.json()).then(d => setContent(d.content?.footer || null)).catch(() => {});
     }, []);
 
-    if (!content) return null;
+    if (!content) {
+        return (
+            <footer className="mx-auto max-w-7xl mb-8 flex items-center justify-center gap-6 px-6 py-8">
+                <div className="h-4 w-48 bg-muted rounded animate-pulse" />
+            </footer>
+        );
+    }
 
     return (
         <footer className="mx-auto max-w-7xl mb-8 flex flex-col items-center justify-between gap-6 px-6 py-8 text-xs font-medium uppercase tracking-widest text-muted-foreground/70 md:flex-row text-center md:text-left">

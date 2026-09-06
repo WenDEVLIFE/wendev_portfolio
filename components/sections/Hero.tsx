@@ -17,7 +17,15 @@ export function Hero() {
         fetch("/api/content").then(r => r.json()).then(d => setContent(d.content?.hero || null)).catch(() => {});
     }, []);
 
-    if (!content) return null;
+    if (!content) {
+        return (
+            <section id="about" className="py-24 px-4 sm:px-6 md:py-32 md:px-12 lg:px-20 relative flex min-h-[90vh] flex-col items-center justify-center text-center">
+                <div className="h-32 w-32 md:h-40 md:w-40 rounded-full bg-muted animate-pulse" />
+                <div className="h-12 w-64 bg-muted rounded-xl animate-pulse mt-8" />
+                <div className="h-6 w-80 bg-muted rounded-lg animate-pulse mt-4" />
+            </section>
+        );
+    }
 
     return (
         <section id="about" className="py-24 px-4 sm:px-6 md:py-32 md:px-12 lg:px-20 relative flex min-h-[90vh] flex-col items-center justify-center text-center">

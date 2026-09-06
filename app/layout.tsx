@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Wendev | Portfolio",
   description: "Web Developer & Designer Portfolio - Crafting premium digital experiences.",
   icons: {
-    icon: "/assets/logo/WHITE-LOGO-PNG.png",
+    icon: "/favicon.png",
   },
 };
 

@@ -49,7 +49,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         badge: "Accepting New Clients",
         ctaPrimary: { label: "View Selected Work", href: "#projects" },
         ctaSecondary: { label: "View CV & Certificates", href: "https://drive.google.com/drive/u/2/folders/1E0Syh-hwKiPOon_cfONmJ9wIWMHWqGH8" },
-        profileImage: "/assets/logo/WHITE-LOGO-PNG.png",
+        profileImage: "/assets/profile/ceo.png",
     },
     about: {
         heading: "Design meets Engineering",

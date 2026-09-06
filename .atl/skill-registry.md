@@ -6,10 +6,10 @@ Last updated: 2026-09-06
 
 ## Sources scanned
 
-- /Users/frouenmedinajr/.config/opencode/skills
-- /Users/frouenmedinajr/.gemini/skills
-- /Users/frouenmedinajr/.gemini/antigravity-cli/skills
-- /Users/frouenmedinajr/.copilot/skills
+- C:\Users\Administrator\.config\opencode\skills
+- C:\Users\Administrator\.gemini\skills
+- C:\Users\Administrator\.gemini\antigravity\skills
+- C:\Users\Administrator\.copilot\skills
 
 ## Contract
 
@@ -21,16 +21,17 @@ Last updated: 2026-09-06
 
 | Skill | Trigger / description | Scope | Path |
 | --- | --- | --- | --- |
-| `branch-pr` | Create Gentle AI pull requests with issue-first checks. Trigger: creating, opening, or preparing PRs for review. | user | `/Users/frouenmedinajr/.config/opencode/skills/branch-pr/SKILL.md` |
-| `chained-pr` | Trigger: PRs over 400 lines, stacked PRs, review slices. Split oversized changes into chained PRs that protect review focus. | user | `/Users/frouenmedinajr/.config/opencode/skills/chained-pr/SKILL.md` |
-| `cognitive-doc-design` | Design docs that reduce cognitive load. Trigger: writing guides, READMEs, RFCs, onboarding, architecture, or review-facing docs. | user | `/Users/frouenmedinajr/.config/opencode/skills/cognitive-doc-design/SKILL.md` |
-| `comment-writer` | Write warm, direct collaboration comments. Trigger: PR feedback, issue replies, reviews, Slack messages, or GitHub comments. | user | `/Users/frouenmedinajr/.config/opencode/skills/comment-writer/SKILL.md` |
-| `go-testing` | Trigger: Go tests, go test coverage, Bubbletea teatest, golden files. Apply focused Go testing patterns. | user | `/Users/frouenmedinajr/.config/opencode/skills/go-testing/SKILL.md` |
-| `issue-creation` | Create and triage GitHub issues from repository evidence. Trigger: issue creation, bug reports, feature requests, or issue approval. | user | `/Users/frouenmedinajr/.config/opencode/skills/issue-creation/SKILL.md` |
-| `judgment-day` | Trigger: judgment day, dual review, adversarial review, juzgar. Run explicit blind dual review with at most two scoped fix/re-judgment rounds. | user | `/Users/frouenmedinajr/.config/opencode/skills/judgment-day/SKILL.md` |
-| `skill-creator` | Trigger: new skills, agent instructions, documenting AI usage patterns. Create LLM-first skills with valid frontmatter. | user | `/Users/frouenmedinajr/.config/opencode/skills/skill-creator/SKILL.md` |
-| `skill-improver` | Trigger: improve skills, audit skills, refactor skills, skill quality. Audit and upgrade existing LLM-first skills. | user | `/Users/frouenmedinajr/.config/opencode/skills/skill-improver/SKILL.md` |
-| `work-unit-commits` | Plan commits as reviewable work units. Trigger: implementation, commit splitting, chained PRs, or keeping tests and docs with code. | user | `/Users/frouenmedinajr/.config/opencode/skills/work-unit-commits/SKILL.md` |
+| `branch-pr` | Create Gentle AI pull requests with issue-first checks. Trigger: creating, opening, or preparing PRs for review. | user | `C:\Users\Administrator\.config\opencode\skills\branch-pr\SKILL.md` |
+| `chained-pr` | Trigger: PRs over 400 lines, stacked PRs, review slices. Split oversized changes into chained PRs that protect review focus. | user | `C:\Users\Administrator\.config\opencode\skills\chained-pr\SKILL.md` |
+| `cognitive-doc-design` | Design docs that reduce cognitive load. Trigger: writing guides, READMEs, RFCs, onboarding, architecture, or review-facing docs. | user | `C:\Users\Administrator\.config\opencode\skills\cognitive-doc-design\SKILL.md` |
+| `comment-writer` | Write warm, direct collaboration comments. Trigger: PR feedback, issue replies, reviews, Slack messages, or GitHub comments. | user | `C:\Users\Administrator\.config\opencode\skills\comment-writer\SKILL.md` |
+| `go-testing` | Trigger: Go tests, go test coverage, Bubbletea teatest, golden files. Apply focused Go testing patterns. | user | `C:\Users\Administrator\.config\opencode\skills\go-testing\SKILL.md` |
+| `issue-creation` | Create Gentle AI issues with issue-first checks. Trigger: creating GitHub issues, bug reports, or feature requests. | user | `C:\Users\Administrator\.config\opencode\skills\issue-creation\SKILL.md` |
+| `judgment-day` | Trigger: judgment day, dual review, adversarial review, juzgar. Run explicit blind dual review with at most two scoped fix/re-judgment rounds. | user | `C:\Users\Administrator\.config\opencode\skills\judgment-day\SKILL.md` |
+| `skill-creator` | Trigger: new skills, agent instructions, documenting AI usage patterns. Create LLM-first skills with valid frontmatter. | user | `C:\Users\Administrator\.config\opencode\skills\skill-creator\SKILL.md` |
+| `skill-improver` | Trigger: improve skills, audit skills, refactor skills, skill quality. Audit and upgrade existing LLM-first skills. | user | `C:\Users\Administrator\.config\opencode\skills\skill-improver\SKILL.md` |
+| `tensorflow-neural-networks` | Build and train neural networks with TensorFlow | user | `C:\Users\Administrator\.gemini\skills\tensorflow-neural-networks\SKILL.md` |
+| `work-unit-commits` | Plan commits as reviewable work units. Trigger: implementation, commit splitting, chained PRs, or keeping tests and docs with code. | user | `C:\Users\Administrator\.config\opencode\skills\work-unit-commits\SKILL.md` |
 
 ## Loading protocol
 

@@ -1,0 +1,53 @@
+/* Reviews horizontal scroll — continuous row animation */
+
+.reviews-scroll-viewport {
+    overflow: hidden;
+    width: 100%;
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+    );
+}
+
+.reviews-scroll-track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+    animation: scroll-reviews 30s linear infinite;
+}
+
+.reviews-scroll-viewport:hover .reviews-scroll-track {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-reviews {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Responsive card widths */
+@media (max-width: 640px) {
+    .review-card {
+        width: 280px !important;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .review-card {
+        width: 320px !important;
+    }
+}

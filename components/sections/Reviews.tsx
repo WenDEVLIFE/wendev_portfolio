@@ -6,6 +6,7 @@ import { Star, MessageSquare, Plus } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-hot-toast";
 import { useTheme } from "next-themes";
+import "./ReviewsScroll.css";
 
 interface Review {
     id: string;
@@ -14,6 +15,37 @@ interface Review {
     rating: number;
     content: string;
     createdAt: string;
+}
+
+function ReviewCard({ review }: { review: Review }) {
+    return (
+        <div className="review-card flex-shrink-0 w-[350px] rounded-3xl border border-border bg-card backdrop-blur-[24px] p-6 sm:p-8 flex flex-col justify-between hover:border-border/80 hover:bg-card/80 transition-all duration-300 group">
+            <div>
+                <div className="flex items-center gap-1 mb-4 text-yellow-400">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                            key={star}
+                            className={`w-4 h-4 ${star <= review.rating ? "fill-current" : "text-muted-foreground/30"}`}
+                        />
+                    ))}
+                </div>
+                <p className="text-muted-foreground font-light text-base leading-relaxed mb-6 italic">
+                    &ldquo;{review.content}&rdquo;
+                </p>
+            </div>
+            <div className="border-t border-border/50 pt-4 flex items-center justify-between">
+                <div>
+                    <h4 className="font-semibold text-foreground text-sm">{review.reviewerName}</h4>
+                    {review.company && (
+                        <p className="text-xs text-muted-foreground/70 mt-0.5">{review.company}</p>
+                    )}
+                </div>
+                <span className="text-[10px] text-muted-foreground/60 font-mono">
+                    {new Date(review.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short" })}
+                </span>
+            </div>
+        </div>
+    );
 }
 
 export function Reviews() {
@@ -35,8 +67,6 @@ export function Reviews() {
     });
     const [isPending, setIsPending] = useState(false);
     const recaptchaRef = useRef<ReCAPTCHA>(null);
-
-    const customEasing: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
     const fetchReviews = async () => {
         try {
@@ -91,26 +121,6 @@ export function Reviews() {
         }
     };
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.08,
-                ease: customEasing
-            }
-        }
-    } as const;
-
-    const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1,
-            transition: { duration: 0.6, ease: customEasing }
-        }
-    } as const;
-
     return (
         <section id="reviews" className="py-24 px-4 sm:px-6 md:py-32 md:px-12 lg:px-20 xl:px-24">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -133,7 +143,7 @@ export function Reviews() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.4, ease: customEasing }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden mb-16"
                     >
                         <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto rounded-3xl border border-border bg-card backdrop-blur-[24px] p-6 sm:p-8 space-y-6">
@@ -214,52 +224,26 @@ export function Reviews() {
             </AnimatePresence>
 
             {isLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[1, 2, 3].map((n) => (
-                        <div key={n} className="rounded-3xl border border-border bg-card p-8 h-48 animate-pulse" />
-                    ))}
+                <div className="reviews-scroll-viewport">
+                    <div className="reviews-scroll-track">
+                        {[1, 2, 3].map((n) => (
+                            <div key={n} className="review-card flex-shrink-0 w-[350px] rounded-3xl border border-border bg-card p-8 h-48 animate-pulse" />
+                        ))}
+                    </div>
                 </div>
             ) : reviews.length > 0 ? (
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                >
-                    {reviews.map((review) => (
-                        <motion.div
-                            key={review.id}
-                            variants={itemVariants}
-                            className="rounded-3xl border border-border bg-card backdrop-blur-[24px] p-6 sm:p-8 flex flex-col justify-between hover:border-border/80 hover:bg-card/80 transition-all duration-300 group"
-                        >
-                            <div>
-                                <div className="flex items-center gap-1 mb-4 text-yellow-400">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <Star
-                                            key={star}
-                                            className={`w-4 h-4 ${star <= review.rating ? "fill-current" : "text-muted-foreground/30"}`}
-                                        />
-                                    ))}
-                                </div>
-                                <p className="text-muted-foreground font-light text-base leading-relaxed mb-6 italic">
-                                    &ldquo;{review.content}&rdquo;
-                                </p>
-                            </div>
-                            <div className="border-t border-border/50 pt-4 flex items-center justify-between">
-                                <div>
-                                    <h4 className="font-semibold text-foreground text-sm">{review.reviewerName}</h4>
-                                    {review.company && (
-                                        <p className="text-xs text-muted-foreground/70 mt-0.5">{review.company}</p>
-                                    )}
-                                </div>
-                                <span className="text-[10px] text-muted-foreground/60 font-mono">
-                                    {new Date(review.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short" })}
-                                </span>
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
+                <div className="reviews-scroll-viewport">
+                    <div className="reviews-scroll-track">
+                        {/* Original set */}
+                        {reviews.map((review) => (
+                            <ReviewCard key={review.id} review={review} />
+                        ))}
+                        {/* Duplicate set for seamless loop */}
+                        {reviews.map((review) => (
+                            <ReviewCard key={`dup-${review.id}`} review={review} />
+                        ))}
+                    </div>
+                </div>
             ) : (
                 <div className="text-center py-12 rounded-3xl border border-border bg-card backdrop-blur-[24px]">
                     <MessageSquare className="w-10 h-10 text-muted-foreground/60 mx-auto mb-4" />

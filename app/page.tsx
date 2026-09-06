@@ -1,44 +1,21 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Background } from "@/components/ui/Background";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
-import { Projects } from "@/components/sections/Projects";
-import { Reviews } from "@/components/sections/Reviews";
-import { Contact } from "@/components/sections/Contact";
-import { ChatBot } from "@/components/ui/ChatBot";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { LazySections } from "@/components/ui/LazySections";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <>
-      {isLoading && <LoadingScreen />}
-      <div className={`relative min-h-screen font-sans transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
-        <Background />
-        <Navbar />
-        <main className="mx-auto max-w-[1920px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
-          <Hero />
-          <About />
-          <Projects />
-          <Reviews />
-          <Contact />
-        </main>
-        <ChatBot />
-        <Footer />
-      </div>
+      <Background />
+      <Navbar />
+      <main className="mx-auto max-w-[1920px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
+        <Hero />
+        <About />
+        <LazySections />
+      </main>
+      <Footer />
     </>
   );
 }

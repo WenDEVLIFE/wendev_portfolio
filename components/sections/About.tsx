@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Palette, Cpu, Globe, ChevronRight } from "lucide-react";
+import { Cpu, Globe, ChevronRight, CheckCircle2, Handshake, DollarSign, MessageCircle } from "lucide-react";
 
 const TECH_STACK = [
     { name: "Flutter", icon: "/assets/icons/flutter.svg" },
@@ -22,6 +22,29 @@ const TECH_STACK = [
     { name: "Java", icon: "/assets/icons/java.svg" },
 ];
 
+const VALUES = [
+    {
+        icon: CheckCircle2,
+        title: "Follow Your Requirements",
+        description: "I listen first, build second. Every feature starts with understanding exactly what you need.",
+    },
+    {
+        icon: Handshake,
+        title: "Collaborate on Ideas",
+        description: "Your vision matters. I work alongside you — refining, suggesting, and shaping ideas together.",
+    },
+    {
+        icon: DollarSign,
+        title: "Respect Your Budget",
+        description: "No surprise costs. I negotiate fairly and deliver maximum value within what you can afford.",
+    },
+    {
+        icon: MessageCircle,
+        title: "Always Approachable",
+        description: "No question is too small. I keep communication open, clear, and free of technical jargon.",
+    },
+];
+
 export function About() {
     return (
         <section id="about" className="py-24 px-4 sm:px-6 md:py-32 md:px-12 lg:px-20 xl:px-24">
@@ -29,26 +52,43 @@ export function About() {
                 <h2 className="text-3xl font-bold tracking-tighter md:text-5xl">Design meets Engineering</h2>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:grid-rows-2">
-                {/* About Card */}
+                {/* Why Choose Me — Values Card */}
                 <motion.div
-                    className="rounded-3xl border border-border bg-card backdrop-blur-[24px] p-8 transition-all duration-500 hover:border-border/80 hover:bg-card relative col-span-1 flex flex-col justify-between overflow-hidden md:col-span-2 md:row-span-2 group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6 }}
+                    className="rounded-3xl border border-border bg-card backdrop-blur-[24px] p-8 transition-all duration-500 hover:border-border/80 hover:bg-card relative col-span-1 flex flex-col overflow-hidden md:col-span-2 md:row-span-2 group"
                 >
                     <div>
-                        <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-full bg-muted border border-border text-foreground transition-colors group-hover:bg-muted/80">
-                            <Palette className="h-5 w-5" />
+                        <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-muted border border-border text-foreground transition-colors group-hover:bg-muted/80">
+                            <Handshake className="h-5 w-5" />
                         </div>
-                        <h3 className="mb-4 text-3xl font-bold tracking-tight">Software Developer</h3>
-                        <p className="text-muted-foreground leading-relaxed text-lg">
-                            Develop Web and mobile applications to meet the needs of modern businesses to upscale their operations.
-                        </p>
+                        <h3 className="mb-2 text-3xl font-bold tracking-tight">Why Choose Me</h3>
+                        <p className="text-muted-foreground text-sm mb-8">More than code — a partner for your project.</p>
                     </div>
-                    <div className="mt-12 flex items-center gap-4 border-t border-border pt-8 text-sm text-muted-foreground/70 font-medium tracking-wide uppercase">
-                        <span></span>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
+                        {VALUES.map((value) => (
+                            <div key={value.title} className="flex flex-col gap-3 rounded-2xl bg-muted/50 border border-border/50 p-5 transition-all duration-300 hover:bg-muted hover:border-border">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-background border border-border">
+                                    <value.icon className="h-4 w-4 text-foreground" />
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold text-foreground text-sm mb-1">{value.title}</h4>
+                                    <p className="text-xs text-muted-foreground leading-relaxed">{value.description}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </motion.div>
 
                 {/* Tech Stack Card */}
                 <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
                     className="rounded-3xl border border-border bg-card backdrop-blur-[24px] p-8 transition-all duration-500 hover:border-border/80 hover:bg-card col-span-1 md:col-span-2 group"
                 >
                     <div className="flex justify-between items-start mb-8">
@@ -71,6 +111,10 @@ export function About() {
 
                 {/* Achievement Card */}
                 <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
                     className="rounded-3xl border border-border bg-card backdrop-blur-[24px] p-8 transition-all duration-500 hover:border-border/80 hover:bg-card col-span-1 flex flex-col justify-between group"
                 >
                     <Globe className="h-6 w-6 text-muted-foreground transition-colors group-hover:text-foreground" />
@@ -82,6 +126,10 @@ export function About() {
 
                 {/* Links Card */}
                 <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
                     className="rounded-3xl border border-border bg-card backdrop-blur-[24px] p-8 transition-all duration-500 hover:border-border/80 hover:bg-card col-span-1 flex flex-col justify-center"
                 >
                     <div className="space-y-6">

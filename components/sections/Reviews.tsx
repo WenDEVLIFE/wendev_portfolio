@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MessageSquare, Plus } from "lucide-react";
+import { Star, MessageSquare, Plus, X } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-hot-toast";
 import { useTheme } from "next-themes";
@@ -129,97 +129,125 @@ export function Reviews() {
                     <p className="text-muted-foreground text-lg">What clients and collaborators say about working with me.</p>
                 </div>
                 <button
-                    onClick={() => setShowForm(!showForm)}
+                    onClick={() => setShowForm(true)}
                     className="flex items-center gap-2 self-start md:self-auto px-6 py-3 rounded-full bg-muted border border-border hover:bg-muted/80 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] cursor-pointer"
                 >
-                    <Plus className={`w-4 h-4 transition-transform duration-300 ${showForm ? "rotate-45" : ""}`} />
-                    {showForm ? "Cancel" : "Write a Review"}
+                    <Plus className="w-4 h-4" />
+                    Write a Review
                 </button>
             </div>
 
-            <AnimatePresence mode="wait">
+            {/* Review Dialog */}
+            <AnimatePresence>
                 {showForm && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        className="overflow-hidden mb-16"
-                    >
-                        <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto rounded-3xl border border-border bg-card backdrop-blur-[24px] p-6 sm:p-8 space-y-6">
-                            <h3 className="text-xl font-bold tracking-tight mb-2">Share your experience</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="flex flex-col gap-1.5">
-                                    <label htmlFor="reviewerName" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Name</label>
-                                    <input
-                                        type="text"
-                                        id="reviewerName"
-                                        placeholder="John Doe"
-                                        className="w-full bg-muted border border-border rounded-2xl px-5 py-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors font-sans"
-                                        value={formData.reviewerName}
-                                        onChange={(e) => setFormData({ ...formData, reviewerName: e.target.value })}
-                                        required
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1.5">
-                                    <label htmlFor="company" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Company / Role</label>
-                                    <input
-                                        type="text"
-                                        id="company"
-                                        placeholder="CEO at TechCorp (Optional)"
-                                        className="w-full bg-muted border border-border rounded-2xl px-5 py-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors font-sans"
-                                        value={formData.company}
-                                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-2">
-                                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Rating</span>
-                                <div className="flex items-center gap-2">
-                                    {[1, 2, 3, 4, 5].map((n) => (
-                                        <button
-                                            key={n}
-                                            type="button"
-                                            onClick={() => setFormData({ ...formData, rating: n })}
-                                            className="transition-transform active:scale-95 cursor-pointer"
-                                        >
-                                            <Star className={`w-8 h-8 ${n <= formData.rating ? "fill-yellow-400 text-yellow-400" : "text-border"}`} />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-1.5">
-                                <label htmlFor="content" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Review</label>
-                                <textarea
-                                    id="content"
-                                    placeholder="Write your detailed review here..."
-                                    rows={4}
-                                    className="w-full bg-muted border border-border rounded-2xl px-5 py-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors resize-none font-sans"
-                                    value={formData.content}
-                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                    required
-                                ></textarea>
-                            </div>
-
-                            <div className="flex justify-center">
-                                <ReCAPTCHA
-                                    ref={recaptchaRef}
-                                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                                    theme={mounted ? (resolvedTheme === 'dark' ? 'dark' : 'light') : 'dark'}
-                                />
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={isPending}
-                                className="w-full bg-accent text-accent-foreground h-14 flex items-center justify-center rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 cursor-pointer font-sans"
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm"
+                            onClick={() => setShowForm(false)}
+                        />
+                        {/* Dialog */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                            className="fixed inset-0 z-[201] flex items-center justify-center p-4 pointer-events-none"
+                        >
+                            <form
+                                onSubmit={handleSubmit}
+                                onClick={(e) => e.stopPropagation()}
+                                className="w-full max-w-xl rounded-3xl border border-border bg-card backdrop-blur-[24px] p-6 sm:p-8 space-y-6 shadow-2xl pointer-events-auto max-h-[90vh] overflow-y-auto"
                             >
-                                {isPending ? "Submitting..." : "Submit Review"}
-                            </button>
-                        </form>
-                    </motion.div>
+                                {/* Header */}
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xl font-bold tracking-tight">Share your experience</h3>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowForm(false)}
+                                        className="p-2 rounded-full hover:bg-muted transition-colors cursor-pointer"
+                                    >
+                                        <X className="w-4 h-4 text-muted-foreground" />
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-1.5">
+                                        <label htmlFor="reviewerName" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Name</label>
+                                        <input
+                                            type="text"
+                                            id="reviewerName"
+                                            placeholder="John Doe"
+                                            className="w-full bg-muted border border-border rounded-2xl px-5 py-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors font-sans"
+                                            value={formData.reviewerName}
+                                            onChange={(e) => setFormData({ ...formData, reviewerName: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1.5">
+                                        <label htmlFor="company" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Company / Role</label>
+                                        <input
+                                            type="text"
+                                            id="company"
+                                            placeholder="CEO at TechCorp (Optional)"
+                                            className="w-full bg-muted border border-border rounded-2xl px-5 py-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors font-sans"
+                                            value={formData.company}
+                                            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Rating</span>
+                                    <div className="flex items-center gap-2">
+                                        {[1, 2, 3, 4, 5].map((n) => (
+                                            <button
+                                                key={n}
+                                                type="button"
+                                                onClick={() => setFormData({ ...formData, rating: n })}
+                                                className="transition-transform active:scale-95 cursor-pointer"
+                                            >
+                                                <Star className={`w-8 h-8 ${n <= formData.rating ? "fill-yellow-400 text-yellow-400" : "text-border"}`} />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-1.5">
+                                    <label htmlFor="content" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/70 ml-1 font-sans">Review</label>
+                                    <textarea
+                                        id="content"
+                                        placeholder="Write your detailed review here..."
+                                        rows={4}
+                                        className="w-full bg-muted border border-border rounded-2xl px-5 py-4 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring transition-colors resize-none font-sans"
+                                        value={formData.content}
+                                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                        required
+                                    ></textarea>
+                                </div>
+
+                                <div className="flex justify-center">
+                                    <ReCAPTCHA
+                                        ref={recaptchaRef}
+                                        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                                        theme={mounted ? (resolvedTheme === 'dark' ? 'dark' : 'light') : 'dark'}
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={isPending}
+                                    className="w-full bg-accent text-accent-foreground h-14 flex items-center justify-center rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 cursor-pointer font-sans"
+                                >
+                                    {isPending ? "Submitting..." : "Submit Review"}
+                                </button>
+                            </form>
+                        </motion.div>
+                    </>
                 )}
             </AnimatePresence>
 

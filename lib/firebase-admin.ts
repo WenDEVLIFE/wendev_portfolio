@@ -2,11 +2,31 @@ import type { App } from "firebase-admin/app";
 import type { Firestore } from "firebase-admin/firestore";
 import type { Auth } from "firebase-admin/auth";
 
-import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-import { getAuth } from "firebase-admin/auth";
+/**
+ * NOTE: firebase-admin is loaded lazily, inside each function, on purpose.
+ *
+ * A top-level `import { cert } from "firebase-admin/app"` creates a runtime
+ * dependency at module load. If the host cannot resolve the package at that
+ * moment, the whole module fails to load and EVERY route that imports this
+ * file returns a 500 error page. By requiring it inside the functions
+ * instead, any failure stays inside the caller's try/catch and surfaces as a
+ * normal error response.
+ *
+ * `firebase-admin` is already in Next.js's default `serverExternalPackages`
+ * list, so it resolves from node_modules at runtime.
+ */
+
+function loadApp(): {
+    cert: (c: Record<string, unknown>) => unknown;
+    getApps: () => App[];
+    initializeApp: (o: Record<string, unknown>) => App;
+} {
+    return require("firebase-admin/app");
+}
 
 function getAdminApp(): App {
+    const { cert, getApps, initializeApp } = loadApp();
+
     const existing = getApps();
     if (existing.length) return existing[0];
 
@@ -68,10 +88,10 @@ function normalizePrivateKey(raw?: string): string | undefined {
 
 export function getAdminDb(): Firestore {
     getAdminApp();
-    return getFirestore();
+    return require("firebase-admin/firestore").getFirestore();
 }
 
 export function getAdminAuth(): Auth {
     getAdminApp();
-    return getAuth();
+    return require("firebase-admin/auth").getAuth();
 }

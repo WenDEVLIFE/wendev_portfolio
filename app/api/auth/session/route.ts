@@ -22,8 +22,20 @@ export async function POST(req: Request) {
 
         return response;
     } catch (e) {
+        const message = e instanceof Error ? e.message : "Unknown error";
         console.error("Session creation error:", e);
-        return NextResponse.json({ error: "Failed to create session." }, { status: 401 });
+
+        // Surface actionable configuration problems instead of a blanket 401
+        let reason = "Failed to create session.";
+        if (message.includes("credentials not configured")) {
+            reason = "Server misconfigured: Firebase Admin credentials are missing on this deployment.";
+        } else if (message.includes("DECODER") || message.includes("PEM") || message.includes("private key")) {
+            reason = "Server misconfigured: FIREBASE_PRIVATE_KEY is not a valid PEM key.";
+        } else if (message.includes("invalid-id-token") || message.includes("expired")) {
+            reason = "Login token expired. Please sign in again.";
+        }
+
+        return NextResponse.json({ error: reason, detail: message }, { status: 401 });
     }
 }
 

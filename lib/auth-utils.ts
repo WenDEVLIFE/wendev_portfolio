@@ -15,15 +15,19 @@ export async function verifyAdmin(req: Request): Promise<NextResponse | null> {
             "medinajrfrouen@gmail.com"
         ].filter((e): e is string => typeof e === "string" && e.length > 0);
 
-        console.log("verifyAdmin - Active User Email:", decodedClaims.email);
-        console.log("verifyAdmin - Allowed Emails:", allowedEmails);
-
         const lowerAllowed = allowedEmails.map(e => e.toLowerCase());
         const userEmail = decodedClaims.email?.toLowerCase();
 
         if (!userEmail || !lowerAllowed.includes(userEmail)) {
             console.warn("verifyAdmin - Forbidden access attempt by:", decodedClaims.email);
-            return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+            return NextResponse.json(
+                {
+                    error:
+                        `Forbidden. Signed in as ${decodedClaims.email ?? "an account with no email"}, ` +
+                        `which is not an authorized admin email.`,
+                },
+                { status: 403 }
+            );
         }
         return null;
     } catch (e) {

@@ -144,7 +144,8 @@ export default function AdminDashboardPage() {
             toast.success("Projects seeded successfully");
             fetchData();
         } else {
-            toast.error("Failed to seed projects");
+            const data = await res.json().catch(() => null);
+            toast.error(data?.error || "Failed to seed projects");
         }
     };
 
@@ -164,7 +165,8 @@ export default function AdminDashboardPage() {
             setShowReviewForm(false);
             fetchData();
         } else {
-            toast.error("Failed to create review");
+            const data = await res.json().catch(() => null);
+            toast.error(data?.error || "Failed to create review");
         }
     };
 
@@ -178,7 +180,8 @@ export default function AdminDashboardPage() {
             toast.success(current ? "Review set to pending" : "Review approved!");
             fetchData();
         } else {
-            toast.error("Failed to update review status");
+            const data = await res.json().catch(() => null);
+            toast.error(data?.error || "Failed to update review status");
         }
     };
 
@@ -189,7 +192,8 @@ export default function AdminDashboardPage() {
             toast.success("Review deleted");
             fetchData();
         } else {
-            toast.error("Failed to delete review");
+            const data = await res.json().catch(() => null);
+            toast.error(data?.error || "Failed to delete review");
         }
     };
 

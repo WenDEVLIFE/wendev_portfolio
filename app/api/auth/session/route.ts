@@ -25,18 +25,42 @@ export async function POST(req: Request) {
         const message = e instanceof Error ? e.message : "Unknown error";
         console.error("Session creation error:", e);
 
-        // Surface actionable configuration problems instead of a blanket 401
-        let reason = "Failed to create session.";
-        if (message.includes("credentials not configured")) {
-            reason = "Server misconfigured: Firebase Admin credentials are missing on this deployment.";
-        } else if (message.includes("DECODER") || message.includes("PEM") || message.includes("private key")) {
-            reason = "Server misconfigured: FIREBASE_PRIVATE_KEY is not a valid PEM key.";
-        } else if (message.includes("invalid-id-token") || message.includes("expired")) {
-            reason = "Login token expired. Please sign in again.";
-        }
-
-        return NextResponse.json({ error: reason, detail: message }, { status: 401 });
+        return NextResponse.json({ error: describeSessionError(message), detail: message }, { status: 401 });
     }
+}
+
+/** Maps an admin SDK failure to something actionable for the operator. */
+function describeSessionError(message: string): string {
+    const m = message.toLowerCase();
+
+    if (m.includes("credentials not configured")) {
+        return "Server misconfigured: Firebase Admin env vars are missing on this deployment (FIREBASE_PROJECT_ID / FIREBASE_CLIENT_EMAIL / FIREBASE_PRIVATE_KEY).";
+    }
+    if (m.includes("cannot find module") || m.includes("module not found")) {
+        return "Server misconfigured: firebase-admin could not be loaded on this deployment.";
+    }
+    if (m.includes("decoder") || m.includes("pem") || m.includes("private key") || m.includes("begin")) {
+        return "Server misconfigured: FIREBASE_PRIVATE_KEY is not a valid PEM key.";
+    }
+    if (m.includes("invalid_grant") || m.includes("invalid_client") || m.includes("invalid jwt signature")) {
+        return "Server misconfigured: the Firebase service account credentials are invalid or revoked.";
+    }
+    if (m.includes("project id") || m.includes("project_id") || m.includes("determine project")) {
+        return "Server misconfigured: FIREBASE_PROJECT_ID is missing or does not match the service account.";
+    }
+    if (m.includes("clock") || m.includes("skew")) {
+        return "Server clock is out of sync. Please try again.";
+    }
+    if (m.includes("invalid-id-token") || m.includes("invalid_id_token") || m.includes("id token is not a valid")) {
+        return "Login token is invalid or expired. Please sign in again.";
+    }
+    if (m.includes("expired")) {
+        return "Login token expired. Please sign in again.";
+    }
+    if (m.includes("enotfound") || m.includes("econnrefused") || m.includes("fetch failed")) {
+        return "Network error reaching Firebase from the server. Please try again.";
+    }
+    return "Failed to create session.";
 }
 
 export async function DELETE() {

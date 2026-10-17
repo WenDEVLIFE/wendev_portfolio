@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
   // Enable React strict mode for better dev experience
   reactStrictMode: true,
 
+  // firebase-admin must stay outside the server bundle. Bundling it breaks
+  // its dynamic requires at runtime on serverless hosts like Vercel.
+  serverExternalPackages: ["firebase-admin"],
+
   // Experimental optimizations
   experimental: {
     // Optimize package imports to reduce bundle size

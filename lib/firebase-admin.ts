@@ -2,20 +2,28 @@ import type { App } from "firebase-admin/app";
 import type { Firestore } from "firebase-admin/firestore";
 import type { Auth } from "firebase-admin/auth";
 
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+import { getAuth } from "firebase-admin/auth";
+
 function getAdminApp(): App {
-    const { cert, getApps, initializeApp } = require("firebase-admin/app");
     const existing = getApps();
     if (existing.length) return existing[0];
 
+    const missing = [
+        !process.env.FIREBASE_PROJECT_ID && "FIREBASE_PROJECT_ID",
+        !process.env.FIREBASE_CLIENT_EMAIL && "FIREBASE_CLIENT_EMAIL",
+        !process.env.FIREBASE_PRIVATE_KEY && "FIREBASE_PRIVATE_KEY",
+    ].filter(Boolean) as string[];
+
+    if (missing.length) {
+        throw new Error("Firebase Admin credentials not configured. Missing: " + missing.join(", "));
+    }
+
     const privateKey = normalizePrivateKey(process.env.FIREBASE_PRIVATE_KEY);
 
-    if (!process.env.FIREBASE_PROJECT_ID || !privateKey) {
-        throw new Error(
-            "Firebase Admin credentials not configured. Missing: " +
-            [!process.env.FIREBASE_PROJECT_ID && "FIREBASE_PROJECT_ID", !privateKey && "FIREBASE_PRIVATE_KEY"]
-                .filter(Boolean)
-                .join(", ")
-        );
+    if (!privateKey) {
+        throw new Error("Firebase Admin credentials not configured. Invalid: FIREBASE_PRIVATE_KEY");
     }
 
     return initializeApp({
@@ -60,10 +68,10 @@ function normalizePrivateKey(raw?: string): string | undefined {
 
 export function getAdminDb(): Firestore {
     getAdminApp();
-    return require("firebase-admin/firestore").getFirestore();
+    return getFirestore();
 }
 
 export function getAdminAuth(): Auth {
     getAdminApp();
-    return require("firebase-admin/auth").getAuth();
+    return getAuth();
 }

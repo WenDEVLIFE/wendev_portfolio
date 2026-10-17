@@ -63,9 +63,10 @@ function isInputHarmful(input: string): { blocked: boolean; reason?: string } {
 }
 
 export const FREE_MODELS = [
-    { id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B" },
-    { id: "qwen/qwen3-32b", label: "Qwen 3 32B" },
-    { id: "openai/gpt-oss-120b", label: "OpenAI 120B" },
+    { id: "openai/gpt-oss-120b", label: "GPT-OSS 120B" },
+    { id: "qwen/qwen3.8-27b", label: "Qwen 3.8 27B" },
+    { id: "openai/gpt-oss-20b", label: "GPT-OSS 20B" },
+    { id: "allam-2-7b", label: "Allam 2 7B" },
 ] as const;
 
 export async function POST(req: Request) {
@@ -89,31 +90,54 @@ export async function POST(req: Request) {
 
         const systemMsg = { role: "system" as const, content: systemContent };
         const userMsg = { role: "user" as const, content: message };
+        const chatMessages = [systemMsg, ...(history || []), userMsg];
 
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${GROQ_API_KEY}`,
-            },
-            body: JSON.stringify({
-                model: modelId,
-                messages: [systemMsg, ...(history || []), userMsg],
-                max_tokens: 1500,
-                temperature: 0.7,
-            }),
-        });
+        // Try the requested model first, then fall back to the others if the
+        // provider has retired it (Groq rotates models frequently).
+        const candidates: string[] = [
+            modelId,
+            ...FREE_MODELS.map(m => m.id).filter(id => id !== modelId),
+        ];
 
-        if (!response.ok) {
+        let lastStatus = 502;
+        let lastError = "AI service unavailable.";
+
+        for (const candidate of candidates) {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${GROQ_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    model: candidate,
+                    messages: chatMessages,
+                    max_tokens: 1500,
+                    temperature: 0.7,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const reply = data.choices?.[0]?.message?.content || null;
+                if (reply) return NextResponse.json({ reply });
+                lastStatus = 503;
+                lastError = "Empty response from AI.";
+                continue;
+            }
+
             const errorBody = await response.text();
-            console.error("Groq API Error:", response.status, errorBody);
-            return NextResponse.json({ reply: null, error: "AI service unavailable. Try a different model." }, { status: 503 });
+            lastStatus = response.status;
+            lastError = "AI service unavailable. Try a different model.";
+            console.error(`Groq API Error [${candidate}]:`, response.status, errorBody);
+
+            // Only a retired/unknown model is worth retrying; auth and rate
+            // limits will fail the same way for every candidate.
+            const isModelGone = response.status === 404 || errorBody.includes("model_not_found");
+            if (!isModelGone) break;
         }
 
-        const data = await response.json();
-        const reply = data.choices?.[0]?.message?.content || null;
-
-        return NextResponse.json({ reply });
+        return NextResponse.json({ reply: null, error: lastError }, { status: lastStatus });
     } catch (e: unknown) {
         console.error("AI Error:", e);
         return NextResponse.json({ error: "Failed to connect to the AI." }, { status: 500 });

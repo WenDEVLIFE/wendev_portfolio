@@ -25,7 +25,10 @@ export async function POST(req: Request) {
         const message = e instanceof Error ? e.message : "Unknown error";
         console.error("Session creation error:", e);
 
-        return NextResponse.json({ error: describeSessionError(message), detail: message }, { status: 401 });
+        return NextResponse.json(
+            { error: describeSessionError(message), detail: `${message} | runtime node ${process.version}` },
+            { status: 401 }
+        );
     }
 }
 

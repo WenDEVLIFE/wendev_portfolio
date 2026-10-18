@@ -6,6 +6,7 @@ import { getAuth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { LogOut, FolderKanban, MessageSquareText, Plus, Upload, Pencil, Star } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { PROJECT_SECTIONS } from "@/lib/project-sections";
 
 interface Project {
     id: string;
@@ -15,6 +16,7 @@ interface Project {
     url: string;
     domain: string;
     image: string;
+    section?: string;
     createdAt: string;
 }
 
@@ -35,6 +37,7 @@ const defaultProject = {
     url: "",
     domain: "",
     image: "",
+    section: "",
 };
 
 const defaultReview = {
@@ -52,6 +55,7 @@ export default function AdminDashboardPage() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState(defaultProject);
     const [seeding, setSeeding] = useState(false);
+    const [adminFilter, setAdminFilter] = useState<string>("All");
     const router = useRouter();
 
     const fetchData = async () => {
@@ -79,7 +83,7 @@ export default function AdminDashboardPage() {
 
     const startEdit = (p: Project) => {
         setEditingId(p.id);
-        setForm({ name: p.name, description: p.description, tags: p.tags.join(", "), url: p.url, domain: p.domain, image: p.image });
+        setForm({ name: p.name, description: p.description, tags: p.tags.join(", "), url: p.url, domain: p.domain, image: p.image, section: p.section || "" });
         setShowForm(true);
     };
 
@@ -219,7 +223,7 @@ export default function AdminDashboardPage() {
 
             {activeTab === "projects" && (
                 <div className="space-y-4">
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 flex-wrap">
                         <button onClick={() => { cancelForm(); setShowForm(!showForm); }}
                             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted text-sm font-medium hover:bg-muted/80 transition-colors">
                             <Plus className="w-4 h-4" /> {showForm ? "Cancel" : "Add Project"}
@@ -228,6 +232,17 @@ export default function AdminDashboardPage() {
                             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted border border-border text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             <Upload className="w-4 h-4" /> {seeding ? "Seeding..." : "Seed Default Projects"}
                         </button>
+                    </div>
+
+                    <div className="flex gap-2 flex-wrap">
+                        {["All", ...PROJECT_SECTIONS].map(s => (
+                            <button key={s} onClick={() => setAdminFilter(s)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors ${
+                                    adminFilter === s ? "bg-foreground text-background" : "bg-muted text-muted-foreground border border-border hover:text-foreground"
+                                }`}>
+                                {s}
+                            </button>
+                        ))}
                     </div>
 
                     {showForm && (
@@ -241,6 +256,13 @@ export default function AdminDashboardPage() {
                                     className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
                                 <input value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} placeholder="Image path (e.g. /assets/...)"
                                     className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
+                                <select value={form.section} onChange={e => setForm({ ...form, section: e.target.value })}
+                                    className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-ring">
+                                    <option value="">Section (optional)</option>
+                                    {PROJECT_SECTIONS.map(s => (
+                                        <option key={s} value={s}>{s}</option>
+                                    ))}
+                                </select>
                             </div>
                             <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Description" rows={2} required
                                 className="w-full rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
@@ -252,12 +274,19 @@ export default function AdminDashboardPage() {
                         </form>
                     )}
 
-                    {projects.map(p => (
+                    {projects
+                        .filter(p => adminFilter === "All" || (p.section || "") === adminFilter)
+                        .map(p => (
                         <div key={p.id} className="rounded-2xl border border-border bg-card p-5 flex items-start justify-between">
                             <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-3 flex-wrap">
                                     <h3 className="font-semibold">{p.name}</h3>
                                     {p.domain && <span className="text-[10px] font-mono text-muted-foreground">{p.domain}</span>}
+                                    {p.section && (
+                                        <span className="text-[10px] font-semibold uppercase tracking-wider bg-muted border border-border text-muted-foreground px-2 py-0.5 rounded-full">
+                                            {p.section}
+                                        </span>
+                                    )}
                                 </div>
                                 <p className="text-sm text-muted-foreground mt-1">{p.description}</p>
                                 <div className="flex flex-wrap gap-2 mt-3">
@@ -274,7 +303,11 @@ export default function AdminDashboardPage() {
                             </div>
                         </div>
                     ))}
-                    {projects.length === 0 && <p className="text-sm text-muted-foreground">No projects yet. Add one or seed the defaults.</p>}
+                    {projects.filter(p => adminFilter === "All" || (p.section || "") === adminFilter).length === 0 && (
+                        <p className="text-sm text-muted-foreground">
+                            {projects.length === 0 ? "No projects yet. Add one or seed the defaults." : "No projects in this section."}
+                        </p>
+                    )}
                 </div>
             )}
 

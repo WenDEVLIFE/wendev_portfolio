@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, X, ChevronDown } from "lucide-react";
+import { PROJECT_SECTIONS } from "@/lib/project-sections";
 
 interface Project {
     id: string;
@@ -13,6 +14,7 @@ interface Project {
     url: string;
     domain: string;
     image: string;
+    section?: string;
 }
 
 const ICON_MAP: Record<string, string> = {
@@ -40,6 +42,7 @@ export function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [showAll, setShowAll] = useState(false);
+    const [activeFilter, setActiveFilter] = useState<string>("All");
     const INITIAL_COUNT = 5;
     const customEasing: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -50,7 +53,17 @@ export function Projects() {
             .catch(() => {});
     }, []);
 
-    const displayed = showAll ? projects : projects.slice(0, INITIAL_COUNT);
+    const availableSections = useMemo(() => {
+        const used = new Set(projects.map(p => p.section).filter(Boolean) as string[]);
+        return ["All", ...PROJECT_SECTIONS.filter(s => used.has(s))];
+    }, [projects]);
+
+    const filtered = useMemo(() => {
+        if (activeFilter === "All") return projects;
+        return projects.filter(p => p.section === activeFilter);
+    }, [projects, activeFilter]);
+
+    const displayed = showAll ? filtered : filtered.slice(0, INITIAL_COUNT);
 
     return (
         <section id="projects" className="py-24 px-6 md:py-32 md:px-12 lg:px-32">
@@ -58,6 +71,24 @@ export function Projects() {
                 <h2 className="mb-4 text-4xl font-bold tracking-tighter md:text-5xl">Solutions That Drive Impact</h2>
                 <p className="text-muted-foreground text-lg">Web and mobile applications designed to solve real business problems.</p>
             </div>
+
+            {availableSections.length > 1 && (
+                <div className="mb-10 flex flex-wrap gap-2">
+                    {availableSections.map(section => (
+                        <button
+                            key={section}
+                            onClick={() => { setActiveFilter(section); setShowAll(false); }}
+                            className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
+                                activeFilter === section
+                                    ? "bg-foreground text-background"
+                                    : "bg-muted text-muted-foreground border border-border hover:text-foreground"
+                            }`}
+                        >
+                            {section}
+                        </button>
+                    ))}
+                </div>
+            )}
 
             <div className="grid gap-6 md:grid-cols-2 md:gap-8">
                 {displayed.map((project, i) => (
@@ -87,7 +118,8 @@ export function Projects() {
                             )}
                             <div className="absolute top-4 left-4 z-20 flex gap-2">
                                 <span className="font-mono text-[10px] text-muted-foreground bg-black/50 dark:bg-black/70 px-2 py-1 rounded-full">0{i + 1}</span>
-                                <span className="font-mono text-[10px] text-muted-foreground bg-black/50 dark:bg-black/70 px-2 py-1 rounded-full">{project.domain}</span>
+                                {project.domain && <span className="font-mono text-[10px] text-muted-foreground bg-black/50 dark:bg-black/70 px-2 py-1 rounded-full">{project.domain}</span>}
+                                {project.section && <span className="font-mono text-[10px] text-muted-foreground bg-black/50 dark:bg-black/70 px-2 py-1 rounded-full">{project.section}</span>}
                             </div>
                         </div>
                         <div className="p-5 md:p-6">
@@ -114,15 +146,21 @@ export function Projects() {
                 ))}
             </div>
 
-            {projects.length > INITIAL_COUNT && (
+            {filtered.length > INITIAL_COUNT && (
                 <div className="flex justify-center mt-12">
                     <button
                         onClick={() => setShowAll(!showAll)}
                         className="flex items-center gap-2 px-6 py-3 rounded-full bg-muted border border-border text-sm font-medium hover:bg-muted/80 transition-all"
                     >
-                        {showAll ? "Show Less" : `View More (${projects.length - INITIAL_COUNT} more)`}
+                        {showAll ? "Show Less" : `View More (${filtered.length - INITIAL_COUNT} more)`}
                         <ChevronDown className={`w-4 h-4 transition-transform ${showAll ? "rotate-180" : ""}`} />
                     </button>
+                </div>
+            )}
+
+            {filtered.length === 0 && projects.length > 0 && (
+                <div className="flex justify-center mt-8">
+                    <p className="text-muted-foreground text-sm">No projects in this section yet.</p>
                 </div>
             )}
 

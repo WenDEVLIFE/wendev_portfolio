@@ -83,8 +83,19 @@ export default function AdminDashboardPage() {
 
     const startEdit = (p: Project) => {
         setEditingId(p.id);
-        setForm({ name: p.name, description: p.description, tags: p.tags.join(", "), url: p.url, domain: p.domain, image: p.image, section: p.section || "" });
+        setForm({
+            name: p.name || "",
+            description: p.description || "",
+            tags: Array.isArray(p.tags) ? p.tags.join(", ") : "",
+            url: p.url || "",
+            domain: p.domain || "",
+            image: p.image || "",
+            section: p.section || "",
+        });
         setShowForm(true);
+        requestAnimationFrame(() => {
+            document.getElementById("project-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
     };
 
     const cancelForm = () => {
@@ -224,7 +235,7 @@ export default function AdminDashboardPage() {
             {activeTab === "projects" && (
                 <div className="space-y-4">
                     <div className="flex gap-3 flex-wrap">
-                        <button onClick={() => { cancelForm(); setShowForm(!showForm); }}
+                        <button onClick={() => { cancelForm(); setShowForm(!showForm); if (!showForm) requestAnimationFrame(() => document.getElementById("project-form")?.scrollIntoView({ behavior: "smooth", block: "start" })); }}
                             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted text-sm font-medium hover:bg-muted/80 transition-colors">
                             <Plus className="w-4 h-4" /> {showForm ? "Cancel" : "Add Project"}
                         </button>
@@ -246,7 +257,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     {showForm && (
-                        <form onSubmit={saveProject} className="rounded-2xl border border-border bg-card p-5 space-y-4">
+                        <form id="project-form" onSubmit={saveProject} className="rounded-2xl border border-border bg-card p-5 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Project name" required
                                     className="rounded-xl bg-muted border border-border px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-ring" />
